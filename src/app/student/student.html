@@ -1,0 +1,88 @@
+@let s = state();
+
+<div  class="flex justify-end mb-6 mt-3">
+            <button
+            class="
+            flex items-center justify-center
+            text-sm
+            mr-4
+            border
+            border-black
+            px-3
+            bg-blue-300
+            hover:bg-blue-400
+            cursor-pointer
+            rounded
+            "
+            type="button"
+            routerLink="/students/new"
+            >
+        <ng-icon name="heroUserPlus" class="h-5 w-5 mr-1"></ng-icon>
+        New    
+        </button>
+            <input
+            type="search"
+            placeholder="Search By Name"
+            class="
+            placeholder:text-gray-400
+            focus:placeholder:text-black
+            border
+            border-black
+            px-2
+            py-1
+            rounded
+            mr-2
+            "
+            [formControl]="q" />
+            <p>Total:{{s.total}}</p>
+        </div>
+@switch (s.kind) {
+    @case ('loading') {
+        <div>Loading...</div>
+    }
+    @case ('error') {
+        <div>{{s.message}}</div>
+    }
+    @case ('ok') {
+        @if (s.students.length===0){
+            <p>No students found.</p>
+        } @else {
+            <div class="relative overflow-x-auto border rounded">
+                <table class="table-auto min-w-full">
+                <thead class="bg-gray-200">
+                    <tr class="text-left text-sm">
+                        <th class="px-3">No.</th>
+                        <th class="px-3 py-1">Name</th>
+                        <th class="px-3">Eamil</th>
+                        <th class="px-3">Phone</th>
+                        <th class="px-3">Address</th>
+                        <th class="px-3">Status</th>
+                        <th class="px-3">Courses</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                    @for (st of s.students; track st.id ; let i = $index){
+                        <tr class="odd:bg-white even:bg-gray-50">
+                            <td class="px-3">{{i + 1}}</td>
+                            <td class="px-3 py-1">{{st.name}}</td>
+                            <td class="px-3">{{st.email}}</td>
+                            <td class="px-3">{{st.phone}}</td>
+                            <td class="px-3">{{st.address}}</td>
+                            <td 
+                            class="px-3"
+                            [class.bg-green-100]="st.status"
+                            [class.text-green-700]="st.status"
+                            [class.bg-red-100]="!st.status"
+                            [class.text-gray-700]="!st.status"
+                            >{{st.status ? 'Active' : 'Inactive'}}</td>
+                            <td
+                            class="px-3"
+                            >{{st.courses.length}}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+        }
+    }
+}

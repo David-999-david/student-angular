@@ -1,20 +1,32 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { Student } from './student/student';
+import { Course } from './course/course';
+import { NgIconsModule } from '@ng-icons/core';
+import { heroMagnifyingGlass, heroPencilSquare, heroPlus, heroUserPlus } from '@ng-icons/heroicons/outline';
+import { akarPersonAdd } from '@ng-icons/akar-icons';
+import { StudentAdd } from './student-add/student-add';
 
 @NgModule({
-  declarations: [
-    App
-  ],
+  declarations: [App, Student, Course, StudentAdd],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    NgIconsModule.withIcons({
+      heroMagnifyingGlass,
+      heroPlus,
+      heroPencilSquare,
+      akarPersonAdd,
+      heroUserPlus
+    }),
+    AppRoutingModule,
+    ReactiveFormsModule,
   ],
-  providers: [
-    provideBrowserGlobalErrorListeners()
-  ],
-  bootstrap: [App]
+  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
+  bootstrap: [App],
 })
-export class AppModule { }
+export class AppModule {}
