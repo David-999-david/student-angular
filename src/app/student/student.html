@@ -1,23 +1,40 @@
 @let s = state();
 
-<div  class="flex justify-end mb-6 mt-3">
+<div  class="flex justify-end mb-6 mt-0.5">
+            @if (flash()) {
+                <div class="
+                text-sm
+                border-none
+                shadow
+                bg-green-200
+                rounded-[6px]
+                text-green-600
+                px-2
+                py-0.5
+                pt-1.5
+                mr-5
+                ">
+                {{ flash() }}
+            </div>
+            }   
             <button
             class="
             flex items-center justify-center
             text-sm
             mr-4
             border
-            border-black
+            border-gray-400
             px-3
             bg-blue-300
             hover:bg-blue-400
+            hover:text-white
             cursor-pointer
             rounded
             "
             type="button"
             routerLink="/students/new"
             >
-        <ng-icon name="heroUserPlus" class="h-5 w-5 mr-1"></ng-icon>
+        <ng-icon name="heroUserPlus" class="h-5 w-5 mt-0.5 mr-1 text-sm"></ng-icon>
         New    
         </button>
             <input
@@ -25,16 +42,21 @@
             placeholder="Search By Name"
             class="
             placeholder:text-gray-400
-            focus:placeholder:text-black
             border
-            border-black
+            border-gray-400
+            outline-none
+            focus:border-blue-500 text-sm
             px-2
             py-1
             rounded
             mr-2
             "
             [formControl]="q" />
-            <p>Total:{{s.total}}</p>
+            <p
+            class="
+            text-sm mt-1
+            "
+            >Total:  {{s.total}}</p>
         </div>
 @switch (s.kind) {
     @case ('loading') {
@@ -47,7 +69,9 @@
         @if (s.students.length===0){
             <p>No students found.</p>
         } @else {
-            <div class="relative overflow-x-auto border rounded">
+            <div class="relative overflow-x-auto border
+            border-gray-300 shadow mx-auto mb-5
+            rounded">
                 <table class="table-auto min-w-full">
                 <thead class="bg-gray-200">
                     <tr class="text-left text-sm">

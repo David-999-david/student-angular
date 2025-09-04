@@ -1,4 +1,4 @@
-export interface StudentM {
+export interface StudentJM {
   id: number;
   name: string;
   email: string;
@@ -22,9 +22,42 @@ export interface CourseM {
   courseStatus: boolean;
 }
 
-export interface ApiResponse<T> {
+export interface StudentM {
+  id: number;
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
+  status: boolean;
+  gender: string;
+  createdAt: Date;
+}
+
+export interface ApiResponseList<T> {
   count: number;
   error: boolean;
   success: boolean;
   data: T[];
 }
+
+export interface ApiResponse<T> {
+  error: boolean;
+  success: boolean;
+  data: T;
+}
+
+export interface Gender {
+  id: number;
+  gender: string;
+}
+
+export interface createS {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  gender_id: number;
+  status: boolean;
+}
+
+export type updateS = Partial<createS>;

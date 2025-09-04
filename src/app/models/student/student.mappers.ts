@@ -1,5 +1,19 @@
-import { ApiResponseDTO, CourseDTO, StudentDTO } from './student.dto';
-import { ApiResponse, CourseM, StudentM } from './student.model';
+import {
+  ApiResponseDTO,
+  ApiResponseDTOList,
+  CourseDTO,
+  GenderDTO,
+  JoinStudentDTO,
+  StudentDTO,
+} from './student.dto';
+import {
+  ApiResponse,
+  ApiResponseList,
+  CourseM,
+  Gender,
+  StudentJM,
+  StudentM,
+} from './student.model';
 
 const toDate = (iso: string) => new Date(iso);
 
@@ -13,11 +27,11 @@ export function MapCourse(dto: CourseDTO): CourseM {
     startDate: toDate(dto.start_date),
     endDate: toDate(dto.end_date),
     createdAt: toDate(dto.created_at),
-    courseStatus: dto.course_status,
+    courseStatus: dto.status,
   };
 }
 
-export function MapStudent(dto: StudentDTO): StudentM {
+export function MapJStudent(dto: JoinStudentDTO): StudentJM {
   return {
     id: dto.id,
     name: dto.name,
@@ -31,11 +45,50 @@ export function MapStudent(dto: StudentDTO): StudentM {
   };
 }
 
-export function MapJoinStudent(dto: ApiResponseDTO<StudentDTO>): ApiResponse<StudentM> {
+export function MapJoinStudent(
+  dto: ApiResponseDTOList<JoinStudentDTO>
+): ApiResponseList<StudentJM> {
   return {
     count: dto.count,
     error: dto.error,
     success: dto.success,
-    data: dto.data.map(MapStudent),
+    data: dto.data.map(MapJStudent),
+  };
+}
+
+export function MapStudent(dto: StudentDTO): StudentM {
+  return {
+    id: dto.id,
+    name: dto.name,
+    email: dto.email,
+    address: dto.address,
+    phone: dto.phone,
+    status: dto.status,
+    gender: dto.gender,
+    createdAt: toDate(dto.created_at),
+  };
+}
+
+export function MapGender(dto: GenderDTO): Gender {
+  return {
+    id: dto.id,
+    gender: dto.name,
+  };
+}
+
+export function MapGResponse(dto: ApiResponseDTOList<GenderDTO>): ApiResponseList<Gender> {
+  return {
+    count: dto.count,
+    error: dto.error,
+    success: dto.success,
+    data: dto.data.map(MapGender),
+  };
+}
+
+export function MapSResponse(dto: ApiResponseDTO<StudentDTO>): ApiResponse<StudentM> {
+  return {
+    error: dto.error,
+    success: dto.success,
+    data: MapStudent(dto.data),
   };
 }

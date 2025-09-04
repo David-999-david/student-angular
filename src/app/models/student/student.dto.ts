@@ -1,4 +1,4 @@
-export interface StudentDTO {
+export interface JoinStudentDTO {
   id: number;
   name: string;
   email: string;
@@ -19,12 +19,35 @@ export interface CourseDTO {
   start_date: string;
   end_date: string;
   created_at: string;
-  course_status: boolean;
+  status: boolean;
 }
 
-export interface ApiResponseDTO<T> {
+export interface StudentDTO {
+  id: number;
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
+  status: boolean;
+  gender: string;
+  created_at: string;
+}
+
+export interface ApiResponseDTOList<T> {
   count: number;
   error: boolean;
   success: boolean;
   data: T[];
+}
+
+export interface ApiResponseDTO<T> {
+  error: boolean;
+  success: boolean;
+  data: T;
+}
+
+
+export interface GenderDTO {
+  id: number;
+  name: string
 }

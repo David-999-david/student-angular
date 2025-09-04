@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { StudentService } from '../services/student.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -11,14 +11,14 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { ApiResponse, StudentM } from '../models/student/student.model';
+import { ApiResponse, ApiResponseList, StudentJM } from '../models/student/student.model';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 type UIState =
-  | { kind: 'loading', total: number }
-  | { kind: 'error'; total: number, message: string }
-  | { kind: 'ok'; total: number; students: StudentM[] };
+  | { kind: 'loading'; total: number }
+  | { kind: 'error'; total: number; message: string }
+  | { kind: 'ok'; total: number; students: StudentJM[] };
 
 @Component({
   selector: 'app-student',
@@ -35,6 +35,8 @@ export class Student implements OnInit {
   q = new FormControl<string>(this.route.snapshot.queryParamMap.get('q') ?? '', {
     nonNullable: true,
   });
+
+  flash = signal<string | null>(null);
 
   ngOnInit(): void {
     this.q.valueChanges
@@ -62,6 +64,17 @@ export class Student implements OnInit {
       .subscribe((v) => {
         if (this.q.value !== v) this.q.setValue(v, { emitEvent: false });
       });
+
+    const s = history.state as { flash?: string };
+
+    if (typeof s?.flash === 'string' && s.flash.trim()) {
+      this.flash.set(s.flash);
+    }
+
+    const { flash, ...rest } = s;
+    history.replaceState(rest, document.title);
+
+    setTimeout(() => this.flash.set(null), 3000);
   }
 
   state = toSignal<UIState>(
@@ -71,7 +84,7 @@ export class Student implements OnInit {
       switchMap((q) =>
         this.service.fetchAll(q).pipe(
           map(
-            (res: ApiResponse<StudentM>) =>
+            (res: ApiResponseList<StudentJM>) =>
               ({
                 kind: 'ok',
                 total: res.count,
