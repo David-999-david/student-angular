@@ -33,6 +33,8 @@ export class StudentDetail {
   saving = signal(false);
 
   errorMsg: string | null = null;
+  flash = signal<string | null>(null);
+  
 
   form = this.fb.group({
     name: [''],
@@ -144,12 +146,13 @@ export class StudentDetail {
     this.service.editSById(id, payload).subscribe({
       next: () => {
         this.refresh$.next();
+        this.flash.set('Update Success')
+        setTimeout(() => this.flash.set(null),3000)
         this.router.navigate([], {
           relativeTo: this.route,
           queryParams: { edit: null },
           queryParamsHandling: 'merge',
           replaceUrl: true,
-          state: { flash: 'Update Success' },
         });
       },
       complete: () => {

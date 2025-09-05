@@ -1,6 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="submit()" novalidate
 class="space-y-5 max-w-md w-full mx-auto rounded-lg mb-10 mt-2
-shadow p-6
+shadow p-6 bg-white
 "
 >
     <p class="text-center text-lg font-semibold">Create Student</p>
@@ -11,7 +11,7 @@ shadow p-6
         <p>{{errorMsg}}</p>
     }
 
-    <div>
+    <div class="space-y-2">
         <label for="name"
         class="block text-sm font-medium"
         >Name</label>
@@ -36,6 +36,7 @@ shadow p-6
         }
     </div>
     <div
+    class="space-y-2"
     >
         <label for="email" class="block text-sm font-medium">Email</label>
         <input
@@ -58,6 +59,7 @@ shadow p-6
         }
     </div>
     <div
+    class="space-y-2"
     >
         <label for="phone" class="block text-sm font-medium">Phone</label>
         <input
@@ -79,7 +81,7 @@ shadow p-6
             </small>
         }
     </div>
-    <div>
+    <div class="space-y-2">
         <label for="address" class="block text-sm font-medium">Address</label>
         <textarea
         id="address"

@@ -26,37 +26,42 @@ import { MapGResponse, MapJoinStudent, MapJoinStudents, MapSResponse } from '../
 export class StudentService {
   constructor(private http: HttpClient) {}
 
-  private baseUrl = `${environment.apiUrl}/students`;
+  private sBaseUrl = `${environment.apiUrl}/students`;
 
   fetchAll(q?: string): Observable<ApiResponseList<StudentJM>> {
     let httpParmas = new HttpParams();
     if (q && q.trim()) httpParmas = httpParmas.set('q', q.trim());
     return this.http
-      .get<ApiResponseDTOList<JoinStudentDTO>>(this.baseUrl, { params: httpParmas })
+      .get<ApiResponseDTOList<JoinStudentDTO>>(this.sBaseUrl, { params: httpParmas })
       .pipe(map(MapJoinStudents));
   }
 
   getSById(id: number): Observable<ApiResponse<StudentJM>> {
     return this.http
-    .get<ApiResponseDTO<JoinStudentDTO>>(`${this.baseUrl}/${id}`)
+    .get<ApiResponseDTO<JoinStudentDTO>>(`${this.sBaseUrl}/${id}`)
     .pipe(map(MapJoinStudent));
   }
 
   editSById(id: number, student: updateS): Observable<ApiResponse<StudentM>> {
     return this.http
-    .put<ApiResponseDTO<StudentDTO>>(`${this.baseUrl}/${id}`, student)
+    .put<ApiResponseDTO<StudentDTO>>(`${this.sBaseUrl}/${id}`, student)
     .pipe(map(MapSResponse));
   }
 
   fetchGender(): Observable<ApiResponseList<Gender>> {
     return this.http
-      .get<ApiResponseDTOList<GenderDTO>>(`${this.baseUrl}/genders`)
+      .get<ApiResponseDTOList<GenderDTO>>(`${this.sBaseUrl}/genders`)
       .pipe(map(MapGResponse));
   }
 
   create(student: createS): Observable<ApiResponse<StudentM>> {
     return this.http
-      .post<ApiResponseDTO<StudentDTO>>(this.baseUrl, student)
+      .post<ApiResponseDTO<StudentDTO>>(this.sBaseUrl, student)
       .pipe(map(MapSResponse));
+  }
+
+  delete(id: number){
+    return this.http
+    .delete(`${this.sBaseUrl}/${id}`)
   }
 }

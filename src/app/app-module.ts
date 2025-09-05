@@ -8,7 +8,7 @@ import { App } from './app';
 import { Student } from './students/student/student';
 import { Course } from './course/course';
 import { NgIconsModule } from '@ng-icons/core';
-import { heroMagnifyingGlass, heroPencilSquare, heroPlus, heroUserPlus } from '@ng-icons/heroicons/outline';
+import { heroArchiveBoxXMark, heroArrowPath, heroMagnifyingGlass, heroPencilSquare, heroPlus, heroUserPlus } from '@ng-icons/heroicons/outline';
 import { akarPersonAdd } from '@ng-icons/akar-icons';
 import { StudentAdd } from './students/student-add/student-add';
 import { StudentEdit } from './students/student-edit/student-edit';
@@ -24,6 +24,8 @@ import { StudentDetail } from './students/student-detail/student-detail';
       heroPencilSquare,
       akarPersonAdd,
       heroUserPlus,
+      heroArchiveBoxXMark,
+      heroArrowPath
     }),
     AppRoutingModule,
     ReactiveFormsModule,

@@ -7,9 +7,12 @@ import {
   debounceTime,
   distinctUntilChanged,
   map,
+  merge,
   of,
   startWith,
+  Subject,
   switchMap,
+  withLatestFrom,
 } from 'rxjs';
 import { ApiResponse, ApiResponseList, StudentJM } from '../../models/student/student.model';
 import { FormControl } from '@angular/forms';
@@ -31,12 +34,14 @@ export class Student implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destoryRef = inject(DestroyRef);
+  private readonly refresh$ = new Subject<void>();
 
   q = new FormControl<string>(this.route.snapshot.queryParamMap.get('q') ?? '', {
     nonNullable: true,
   });
 
   flash = signal<string | null>(null);
+  deleteId = signal<number | null>(null);
 
   ngOnInit(): void {
     this.q.valueChanges
@@ -77,10 +82,21 @@ export class Student implements OnInit {
     setTimeout(() => this.flash.set(null), 3000);
   }
 
+  private readonly query$ = this.route.queryParamMap.pipe(
+    map(pm => pm.get('q') ?? ''),
+    distinctUntilChanged()
+  )
+
+  private readonly reload$ = merge(
+    this.query$,
+    this.refresh$.pipe(
+      withLatestFrom(this.query$),
+      map(([_,q]) => q)
+    )
+  )
+
   state = toSignal<UIState>(
-    this.route.queryParamMap.pipe(
-      map((pm) => pm.get('q') ?? ''),
-      distinctUntilChanged(),
+    this.reload$.pipe(
       switchMap((q) =>
         this.service.fetchAll(q).pipe(
           map(
@@ -104,4 +120,24 @@ export class Student implements OnInit {
     ),
     { requireSync: true }
   );
+
+  delete(id: number){
+    this.deleteId.set(id);
+
+    this.service.delete(id)
+    .subscribe({
+      next: () => {
+        this.refresh$.next();
+        this.flash.set('Delete Success');
+        setTimeout(() => this.flash.set(null), 3000);
+      },
+      error: (err) => {
+        const msg = typeof err?.error === 'string'
+          ? err.error
+          : err?.message ?? 'Delete failed';
+        this.flash.set(msg);
+        setTimeout(() => this.flash.set(null), 3000);
+      }
+    })
+  }
 }

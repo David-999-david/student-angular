@@ -1,8 +1,8 @@
 @defer (on viewport) { @if (vm$ | async; as v) {
-<div class="mx-5">
+<div class="mx-5 pb-5">
   @if (v.e) {
   <div
-    class="flex flex-col w-fit sm:w-fit shadow rounded px-5 pb-7 pt-4 mx-auto"
+    class="flex bg-[#FBFBFB] flex-col w-fit sm:w-fit shadow rounded px-5 pb-7 pt-4 mx-auto"
   >
     <div class="flex justify-between items-start">
         <p class="font-semibold text-[20px] mb-5">Edit Student</p>
@@ -103,7 +103,7 @@
         formControlName="gender_id"
         class="
         w-40 sm:w-48
-        text-sm text-right w-50
+        text-sm t w-50
         border rounded border-gray-300 shadow
         outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400
         pb-0.5 px-2
@@ -126,7 +126,7 @@
         <select
         id="status"
         formControlName="status"
-        class="text-sm text-right w-50
+        class="text-sm w-50
         border rounded border-gray-300 shadow
         outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400
         pb-0.5 px-2
@@ -161,7 +161,7 @@
   </div>
   } @else {
   <div
-    class="flex flex-col w-full sm:w-auto max-w-full sm:max-w-xl shadow rounded px-5 py-2 mx-auto"
+    class="flex flex-col bg-[#FBFBFB] w-full shadow sm:w-auto max-w-full sm:max-w-xl shadow rounded px-5 pt-4 pb-2 mx-auto"
   >
     <div class="flex justify-between">
       <span
@@ -170,11 +170,23 @@
         [class.bg-red-200]="!v.s.status"
         >{{ v.s.status ? 'Active' : 'Inactive' }}</span
       >
-      <ng-icon
+      <div class="flex items-center gap-x-4">
+        @if (flash()) {
+            <p
+            class="text-sm
+            border border-none shadow rounded
+            bg-green-200
+            px-2 py-0.5
+
+            "
+            >{{flash()}}</p>
+        }
+        <ng-icon
         name="heroPencilSquare"
         class="bg-green-200 rounded text-[16px]"
         (click)="onClick()"
       ></ng-icon>
+      </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-2 sm:gap-x-20 gap-y-3 mt-3 mb-3">
       <div class="grid grid-cols-[80px_1fr] items-start gap-x-4">
@@ -201,10 +213,10 @@
   </div>
   }
   @if (v.s.courses.length === 0) {
-    <p class="text-center text-sm font-medium mt-30">There is no course </p>
+    <p class="text-center text-sm text-white font-medium mt-30">There is no course </p>
   } @else {
-    <div class="relative overflow-x-auto
-    border border-gray-300 rounded shadow mt-5 mb-20
+    <div class="relative overflow-x-auto bg-[#FBFBFB]
+    border border-gray-300 rounded shadow mt-5
     ">
         <table class="table-auto min-w-full">
             <thead class="text-sm font-medium text-left">
