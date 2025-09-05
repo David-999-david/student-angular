@@ -9,6 +9,7 @@ import {
   Gender,
   StudentJM,
   StudentM,
+  updateS,
 } from '../models/student/student.model';
 import {
   ApiResponseDTO,
@@ -17,7 +18,7 @@ import {
   JoinStudentDTO,
   StudentDTO,
 } from '../models/student/student.dto';
-import { MapGResponse, MapJoinStudent, MapSResponse } from '../models/student/student.mappers';
+import { MapGResponse, MapJoinStudent, MapJoinStudents, MapSResponse } from '../models/student/student.mappers';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,19 @@ export class StudentService {
     if (q && q.trim()) httpParmas = httpParmas.set('q', q.trim());
     return this.http
       .get<ApiResponseDTOList<JoinStudentDTO>>(this.baseUrl, { params: httpParmas })
-      .pipe(map(MapJoinStudent));
+      .pipe(map(MapJoinStudents));
+  }
+
+  getSById(id: number): Observable<ApiResponse<StudentJM>> {
+    return this.http
+    .get<ApiResponseDTO<JoinStudentDTO>>(`${this.baseUrl}/${id}`)
+    .pipe(map(MapJoinStudent));
+  }
+
+  editSById(id: number, student: updateS): Observable<ApiResponse<StudentM>> {
+    return this.http
+    .put<ApiResponseDTO<StudentDTO>>(`${this.baseUrl}/${id}`, student)
+    .pipe(map(MapSResponse));
   }
 
   fetchGender(): Observable<ApiResponseList<Gender>> {

@@ -60,4 +60,12 @@ export interface createS {
   status: boolean;
 }
 
-export type updateS = Partial<createS>;
+export interface updateS {
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  gender_id?: number | null;
+  status?: boolean | null;
+}
+

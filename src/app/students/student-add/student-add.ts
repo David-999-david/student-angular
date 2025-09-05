@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { StudentService } from '../services/student.service';
+import { StudentService } from '../../services/student.service';
 import { map } from 'rxjs';
 import { FormBuilder, Validators } from '@angular/forms';
-import { createS } from '../models/student/student.model';
+import { createS } from '../../models/student/student.model';
 import { Router } from '@angular/router';
 
 @Component({

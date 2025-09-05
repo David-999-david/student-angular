@@ -45,7 +45,7 @@ export function MapJStudent(dto: JoinStudentDTO): StudentJM {
   };
 }
 
-export function MapJoinStudent(
+export function MapJoinStudents(
   dto: ApiResponseDTOList<JoinStudentDTO>
 ): ApiResponseList<StudentJM> {
   return {
@@ -53,6 +53,16 @@ export function MapJoinStudent(
     error: dto.error,
     success: dto.success,
     data: dto.data.map(MapJStudent),
+  };
+}
+
+export function MapJoinStudent(
+  dto: ApiResponseDTO<JoinStudentDTO>
+): ApiResponse<StudentJM> {
+  return {
+    error: dto.error,
+    success: dto.success,
+    data: MapJStudent(dto.data),
   };
 }
 

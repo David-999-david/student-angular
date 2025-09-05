@@ -5,15 +5,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { Student } from './student/student';
+import { Student } from './students/student/student';
 import { Course } from './course/course';
 import { NgIconsModule } from '@ng-icons/core';
 import { heroMagnifyingGlass, heroPencilSquare, heroPlus, heroUserPlus } from '@ng-icons/heroicons/outline';
 import { akarPersonAdd } from '@ng-icons/akar-icons';
-import { StudentAdd } from './student-add/student-add';
+import { StudentAdd } from './students/student-add/student-add';
+import { StudentEdit } from './students/student-edit/student-edit';
+import { StudentDetail } from './students/student-detail/student-detail';
 
 @NgModule({
-  declarations: [App, Student, Course, StudentAdd],
+  declarations: [App, Student, Course, StudentAdd, StudentEdit, StudentDetail],
   imports: [
     BrowserModule,
     NgIconsModule.withIcons({
@@ -21,7 +23,7 @@ import { StudentAdd } from './student-add/student-add';
       heroPlus,
       heroPencilSquare,
       akarPersonAdd,
-      heroUserPlus
+      heroUserPlus,
     }),
     AppRoutingModule,
     ReactiveFormsModule,

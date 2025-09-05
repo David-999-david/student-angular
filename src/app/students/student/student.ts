@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { StudentService } from '../services/student.service';
+import { StudentService } from '../../services/student.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   catchError,
@@ -11,7 +11,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { ApiResponse, ApiResponseList, StudentJM } from '../models/student/student.model';
+import { ApiResponse, ApiResponseList, StudentJM } from '../../models/student/student.model';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
