@@ -33,10 +33,16 @@ export interface StudentDTO {
   created_at: string;
 }
 
-export interface ApiResponseDTOList<T> {
+export interface MetaDto {
   count: number;
+  totalPages: number;
+}
+
+export interface ApiResponseDTOList<T> {
+  count?: number | null;
   error: boolean;
   success: boolean;
+  meta: MetaDto,
   data: T[];
 }
 

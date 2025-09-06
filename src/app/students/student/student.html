@@ -1,30 +1,16 @@
 @let s = state();
 
-<div  class="flex justify-end mb-6 mt-0.5">
-            @if (flash()) {
-                <div class="
-                text-sm
-                border-none
-                shadow
-                bg-green-200
-                rounded-[6px]
-                text-green-600
-                px-2
-                pb-1
-                pt-1
-                mr-5
-                ">
-                {{ flash() }}
-            </div>
-            }   
-            <button
+<div  class="flex justify-between mb-2 ml-1 mt-1">  
+            <div class="flex">
+                <button
             class="
             flex items-center justify-center
             text-sm
             mr-4
             border
             border-gray-400
-            px-3
+            px-1
+            py-1
             bg-blue-300
             hover:bg-blue-400
             hover:text-white
@@ -57,8 +43,68 @@
             class="
             text-sm mt-1 text-white mr-2
             "
-            >Total:  {{s.total}}</p>
-        </div>
+            >  
+        @if (hasQuery | async) {
+           Search: {{s.queryTotal}}
+        } @else {
+           Total: {{s.total}}
+        }
+        </p>
+        @if (flash()) {
+                <div class="
+                text-sm
+                border-none
+                shadow
+                bg-green-200
+                rounded-[6px]
+                text-green-600
+                px-2
+                pb-1
+                pt-1
+                mr-5
+                ">
+                {{ flash() }}
+            </div>
+            } 
+            </div>
+            <div class="flex">
+                <button
+                class="
+                text-sm
+                px-1 rounded border-none shadow
+                border bg-white hover:bg-gray-200 cursor-pointer
+                mr-6
+                "
+                [disabled]="s.page === 1"
+                (click)="prevPage(s.page)"
+                >Prev</button>
+                @if (s.total > 0) {
+                    @for (p of range(s.totalPage); track p) {
+                    <button
+                    class="
+                    text-[#FF9A00]
+                    px-2 cursor-pointer text-sm ml-2 mr-2
+                    "
+                    [class.bg-white]="p == s.page"
+                    [class.rounded]="p == s.page"
+                    [class.bg-blue-200]="p == s.page"
+                    (click)="goToPage(p)"
+                    >
+                    {{p}}
+                </button>
+                }
+                }
+                <button
+                class="
+                text-sm
+                px-1 rounded border-none shadow
+                border bg-white hover:bg-gray-200 ml-2 mr-1 cursor-pointer
+                "
+                [disabled]="s.page == s.totalPage"
+                (click)="nextPage(s.page)"
+                >Next</button>
+            </div>
+</div>
 @switch (s.kind) {
     @case ('loading') {
         <div>Loading...</div>
@@ -70,10 +116,11 @@
         @if (s.students.length===0){
             <p>No students found.</p>
         } @else {
-            <div class="relative overflow-x-auto border
-            border-gray-300 shadow mx-auto mb-5 pb-5
+            <div class="pb-5 px-1">
+                <div class="relative overflow-x-auto border
+            border-gray-300 shadow mx-auto
             rounded">
-                <table class="table-auto min-w-full px-2">
+                <table class="table-auto min-w-full">
                 <thead class="bg-gray-200">
                     <tr class="text-left text-sm">
                         <th class="px-3">No.</th>
@@ -89,24 +136,24 @@
                 </thead>
                 <tbody class="divide-y">
                     @for (st of s.students; track st.id ; let i = $index){
-                        <tr class="odd:bg-white even:bg-gray-100"
+                        <tr class="odd:bg-white even:bg-gray-100 text-sm"
                         [routerLink]="['/students', st.id, 'detail']"
                         >
-                            <td class="px-3 w-[50px]">{{i + 1}}</td>
-                            <td class="px-3 py-1 w-[60px]">{{st.name}}</td>
-                            <td class="px-3 w-[50px]">{{st.email}}</td>
-                            <td class="px-3 w-fit">{{st.phone}}</td>
+                            <td class="px-3 w-24">{{i + 1}}</td>
+                            <td class="px-3 py-2 w-40">{{st.name}}</td>
+                            <td class="px-3 w-40">{{st.email}}</td>
+                            <td class="px-3 w-48px">{{st.phone}}</td>
                             <td class="px-3 w-fit">{{st.address}}</td>
-                            <td class="px-3 w-fit">{{st.gender}}</td>
+                            <td class="px-3 w-24">{{st.gender}}</td>
                             <td 
-                            class="px-3 w-fit"
+                            class="px-3 w-[40px]"
                             [class.bg-green-100]="st.status"
                             [class.text-green-700]="st.status"
                             [class.bg-red-100]="!st.status"
                             [class.text-gray-700]="!st.status"
                             >{{st.status ? 'Active' : 'Inactive'}}</td>
                             <td
-                            class="px-3"
+                            class="px-3 w-40"
                             >{{st.courses.length}}</td>
                             <td>
                                 @if (deleteId() === st.id) {
@@ -114,12 +161,12 @@
                                 } @else {<ng-icon name="heroArchiveBoxXMark"
                                 (click)="delete(st.id); $event.stopPropagation(); $event.preventDefault()"
                                 ></ng-icon>}
-                                
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            </div>
             </div>
         }
     }

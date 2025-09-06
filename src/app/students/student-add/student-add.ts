@@ -75,6 +75,7 @@ export class StudentAdd {
             ? err?.error
             : err?.error?.message ?? err?.message ?? 'Failed to create student';
         this.errorMsg = msg;
+        this.saving = false;
       },
       complete: () => {
         this.saving = false;

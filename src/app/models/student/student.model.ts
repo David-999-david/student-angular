@@ -33,10 +33,16 @@ export interface StudentM {
   createdAt: Date;
 }
 
-export interface ApiResponseList<T> {
+export interface Meta {
   count: number;
+  totalPages: number;
+}
+
+export interface ApiResponseList<T> {
+  count?: number | null;
   error: boolean;
   success: boolean;
+  meta: Meta,
   data: T[];
 }
 

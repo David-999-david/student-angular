@@ -18,7 +18,12 @@ import {
   JoinStudentDTO,
   StudentDTO,
 } from '../models/student/student.dto';
-import { MapGResponse, MapJoinStudent, MapJoinStudents, MapSResponse } from '../models/student/student.mappers';
+import {
+  MapGResponse,
+  MapJoinStudent,
+  MapJoinStudents,
+  MapSResponse,
+} from '../models/student/student.mappers';
 
 @Injectable({
   providedIn: 'root',
@@ -28,9 +33,10 @@ export class StudentService {
 
   private sBaseUrl = `${environment.apiUrl}/students`;
 
-  fetchAll(q?: string): Observable<ApiResponseList<StudentJM>> {
+  fetchAll(q?: string, page?: number): Observable<ApiResponseList<StudentJM>> {
     let httpParmas = new HttpParams();
     if (q && q.trim()) httpParmas = httpParmas.set('q', q.trim());
+    if (page) httpParmas = httpParmas.set('p', page.toString());
     return this.http
       .get<ApiResponseDTOList<JoinStudentDTO>>(this.sBaseUrl, { params: httpParmas })
       .pipe(map(MapJoinStudents));
@@ -38,14 +44,14 @@ export class StudentService {
 
   getSById(id: number): Observable<ApiResponse<StudentJM>> {
     return this.http
-    .get<ApiResponseDTO<JoinStudentDTO>>(`${this.sBaseUrl}/${id}`)
-    .pipe(map(MapJoinStudent));
+      .get<ApiResponseDTO<JoinStudentDTO>>(`${this.sBaseUrl}/${id}`)
+      .pipe(map(MapJoinStudent));
   }
 
   editSById(id: number, student: updateS): Observable<ApiResponse<StudentM>> {
     return this.http
-    .put<ApiResponseDTO<StudentDTO>>(`${this.sBaseUrl}/${id}`, student)
-    .pipe(map(MapSResponse));
+      .put<ApiResponseDTO<StudentDTO>>(`${this.sBaseUrl}/${id}`, student)
+      .pipe(map(MapSResponse));
   }
 
   fetchGender(): Observable<ApiResponseList<Gender>> {
@@ -60,8 +66,7 @@ export class StudentService {
       .pipe(map(MapSResponse));
   }
 
-  delete(id: number){
-    return this.http
-    .delete(`${this.sBaseUrl}/${id}`)
+  delete(id: number) {
+    return this.http.delete(`${this.sBaseUrl}/${id}`);
   }
 }

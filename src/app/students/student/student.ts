@@ -19,9 +19,23 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 type UIState =
-  | { kind: 'loading'; total: number }
-  | { kind: 'error'; total: number; message: string }
-  | { kind: 'ok'; total: number; students: StudentJM[] };
+  | { kind: 'loading'; total: number; queryTotal: number; page: number; totalPage: number }
+  | {
+      kind: 'error';
+      total: number;
+      message: string;
+      queryTotal: number;
+      page: number;
+      totalPage: number;
+    }
+  | {
+      kind: 'ok';
+      total: number;
+      students: StudentJM[];
+      queryTotal: number;
+      page: number;
+      totalPage: number;
+    };
 
 @Component({
   selector: 'app-student',
@@ -55,7 +69,7 @@ export class Student implements OnInit {
         const nextQ = val.trim();
         this.router.navigate([], {
           relativeTo: this.route,
-          queryParams: { q: nextQ ? nextQ : null },
+          queryParams: { q: nextQ ? nextQ : null, p: 1 },
           queryParamsHandling: 'merge',
         });
       });
@@ -82,36 +96,51 @@ export class Student implements OnInit {
     setTimeout(() => this.flash.set(null), 3000);
   }
 
-  private readonly query$ = this.route.queryParamMap.pipe(
-    map(pm => pm.get('q') ?? ''),
+  hasQuery = this.route.queryParamMap.pipe(
+    map((pm) => pm.has('q')),
     distinctUntilChanged()
-  )
+  );
+
+  private readonly query$ = this.route.queryParamMap.pipe(
+    map((pm) => ({
+      q: pm.get('q') ?? '',
+      p: parseInt(pm.get('p') ?? '1', 10) || 1 ,
+    })),
+    distinctUntilChanged()
+  );
 
   private readonly reload$ = merge(
     this.query$,
     this.refresh$.pipe(
       withLatestFrom(this.query$),
-      map(([_,q]) => q)
+      map(([_, q]) => q)
     )
-  )
+  );
 
   state = toSignal<UIState>(
     this.reload$.pipe(
-      switchMap((q) =>
-        this.service.fetchAll(q).pipe(
-          map(
-            (res: ApiResponseList<StudentJM>) =>
-              ({
-                kind: 'ok',
-                total: res.count,
-                students: res.data,
-              } as UIState)
-          ),
-          startWith({ kind: 'loading', total: 0 } as UIState),
+      switchMap(({ q, p }) =>
+        this.service.fetchAll(q, p).pipe(
+          map((res: ApiResponseList<StudentJM>) => {
+            const totalPage = Math.max(1,res.meta.totalPages ?? 1);
+            if (p > totalPage) {
+              this.goToPage(totalPage);
+            }
+            return {
+              kind: 'ok',
+              students: res.data,
+              page: p,
+              queryTotal: res.data.length,
+              total: res.meta.count,
+              totalPage: totalPage,
+            } as UIState;
+          }),
+          startWith({ kind: 'loading', total: 0, queryTotal: 0, page: 1, totalPage: 1 } as UIState),
           catchError(() =>
             of({
               kind: 'error',
               total: 0,
+              queryTotal: 0,
               message: 'Failed to load students',
             } as UIState)
           )
@@ -121,23 +150,44 @@ export class Student implements OnInit {
     { requireSync: true }
   );
 
-  delete(id: number){
+  delete(id: number) {
     this.deleteId.set(id);
 
-    this.service.delete(id)
-    .subscribe({
+    this.service.delete(id).subscribe({
       next: () => {
         this.refresh$.next();
         this.flash.set('Delete Success');
         setTimeout(() => this.flash.set(null), 3000);
       },
       error: (err) => {
-        const msg = typeof err?.error === 'string'
-          ? err.error
-          : err?.message ?? 'Delete failed';
+        const msg = typeof err?.error === 'string' ? err.error : err?.message ?? 'Delete failed';
         this.flash.set(msg);
         setTimeout(() => this.flash.set(null), 3000);
-      }
-    })
+      },
+    });
+  }
+
+  goToPage(p: number) {
+    const qpm = this.route.snapshot.queryParamMap;
+    const q = qpm.get('q') ?? null;
+    const page = Math.max(1, Math.floor(p));
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: q, p: page },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  prevPage(cur: number) {
+    this.goToPage(cur - 1);
+  }
+
+  nextPage(cur: number) {
+    this.goToPage(cur + 1);
+  }
+
+  range(n: number): number[]{
+    const len = Math.max(1, Math.floor(n || 1));
+    return Array.from({length: len}, (_,i) => i+1);
   }
 }

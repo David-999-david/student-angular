@@ -1,0 +1,138 @@
+@let s = state();
+
+<div class="flex justify-between mb-2 mt-1 mx-1">
+    <div class="flex items-center">
+        <button
+        class="
+        text-sm
+        rounded border
+        px-2
+        py-1
+        bg-blue-300
+        hover:bg-blue-400
+        mr-4
+        "
+        >
+            <ng-icon name="heroDocumentPlus"
+            class="pt-0.5"
+            ></ng-icon>
+            New
+        </button>
+        <input
+        type="search"
+        [formControl]="qc"
+        placeholder="Search..."
+        class="
+        border rounded bg-white
+        px-1 text-sm
+        py-1 placeholder:text-gray-400 outline-none
+        focus:border-blue-400 border-black
+        "
+        >
+        <p
+        class="
+        text-sm text-white
+        ml-2
+        "
+        >
+            @if (hasQuery | async) {
+                Search:{{s.total}}
+            }@else {
+                Total:{{s.total}}
+            }
+        </p>
+    </div>
+    <div class="mr-1.5">
+        <button
+        class="
+        border rounded
+        bg-white px-1
+        hover:bg-gray-200
+        text-sm py-1 mr-4
+        cursor-pointer
+        "
+        [disabled]="s.page === 1"
+        (click)="prevPage(s.page)"
+        >Prev</button>
+        @for (n of range(s.totalPage); track n) {
+            <button
+            class="
+                    text-[#FF9A00]
+                    px-2 cursor-pointer text-sm py-1 ml-2 mr-2
+                    "
+                    [class.bg-white]="n == s.page"
+                    [class.rounded]="n == s.page"
+                    [class.bg-blue-200]="n == s.page"
+                    (click)="goToPage(n)"
+            >
+                {{n}}
+            </button>
+        }
+        <button
+        class="
+        border rounded
+        bg-white px-1
+        hover:bg-gray-200
+        text-sm py-1 ml-1
+        cursor-pointer
+        "
+        [disabled]="s.page === s.totalPage"
+        (click)="nextPage(s.page)"
+        >Next</button>
+    </div>
+</div>
+@switch (s.kind) {
+    @case ('loading') {
+        <p>Loading...</p>
+    }
+    @case ('error') {
+        <p>Failed to load courses</p>
+    }
+    @case ('ok') {
+        @if(s.courses.length === 0){
+            <p>There is no courses for show!</p>
+        } @else {
+            <div class="pb-5 px-1">
+                <div class="relative overflow-x-auto
+            border rounded
+                ">
+                <table
+                class="table-auto min-w-full"
+                >
+                    <thead class="bg-gray-200 text-sm font-medium">
+                        <tr class="text-left">
+                            <th class="px-2 py-1">No.</th>
+                            <th class="px-2 py-1">Name</th>
+                            <th class="px-2 py-1">Description</th>
+                            <th class="px-2 py-1">Limit</th>
+                            <th class="px-2 py-1">Current</th>
+                            <th class="px-2 py-1">Status</th>
+                            <th class="px-5 py-1">Start-Date</th>
+                            <th class="px-5 py-1">End-Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        @for (c of s.courses; track c.id; let i = $index) {
+                            <tr class="even:bg-gray-100 odd:bg-white text-sm">
+                                <td class="px-2 py-2 w-24">{{i+1}}</td>
+                                <td class="px-2 w-40">{{c.name}}</td>
+                                <td class="px-2">{{c.description}}</td>
+                                <td class="px-2">{{c.limit}}</td>
+                                <td class="px-2">{{c.current}}</td>
+                                <td class="px-2 w-[40px]"
+                                [class.bg-green-100]="c.status"
+                                [class.text-green-700]="c.status"
+                                [class.bg-red-100]="!c.status"
+                                [class.text-gray-700]="!c.status"
+                                >{{c.status ? 'Active' : 'Inactive'}}</td>
+                                <td class="px-5 w-48">{{c.start_date}}</td>
+                                <td class="px-5 py-2 w-48">{{c.end_date}}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        }
+    }
+}

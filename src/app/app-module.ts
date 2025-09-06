@@ -6,16 +6,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Student } from './students/student/student';
-import { Course } from './course/course';
+import { Course } from './courses/course/course';
 import { NgIconsModule } from '@ng-icons/core';
-import { heroArchiveBoxXMark, heroArrowPath, heroMagnifyingGlass, heroPencilSquare, heroPlus, heroUserPlus } from '@ng-icons/heroicons/outline';
+import { heroArchiveBoxXMark, heroArrowPath, heroDocumentPlus, heroMagnifyingGlass, heroPencilSquare, heroPlus, heroUserPlus } from '@ng-icons/heroicons/outline';
 import { akarPersonAdd } from '@ng-icons/akar-icons';
 import { StudentAdd } from './students/student-add/student-add';
 import { StudentEdit } from './students/student-edit/student-edit';
 import { StudentDetail } from './students/student-detail/student-detail';
+import { CourseAdd } from './courses/course-add/course-add';
 
 @NgModule({
-  declarations: [App, Student, Course, StudentAdd, StudentEdit, StudentDetail],
+  declarations: [App, Student, Course, StudentAdd, StudentEdit, StudentDetail, CourseAdd],
   imports: [
     BrowserModule,
     NgIconsModule.withIcons({
@@ -25,7 +26,8 @@ import { StudentDetail } from './students/student-detail/student-detail';
       akarPersonAdd,
       heroUserPlus,
       heroArchiveBoxXMark,
-      heroArrowPath
+      heroArrowPath,
+      heroDocumentPlus
     }),
     AppRoutingModule,
     ReactiveFormsModule,
