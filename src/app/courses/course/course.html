@@ -12,6 +12,7 @@
         hover:bg-blue-400
         mr-4
         "
+        routerLink="/courses/new"
         >
             <ng-icon name="heroDocumentPlus"
             class="pt-0.5"
@@ -113,7 +114,9 @@
                     </thead>
                     <tbody class="divide-y">
                         @for (c of s.courses; track c.id; let i = $index) {
-                            <tr class="even:bg-gray-100 odd:bg-white text-sm">
+                            <tr class="even:bg-gray-100 odd:bg-white text-sm"
+                            routerLink="/courses"
+                            >
                                 <td class="px-2 py-2 w-24">{{i+1}}</td>
                                 <td class="px-2 w-40">{{c.name}}</td>
                                 <td class="px-2">{{c.description}}</td>

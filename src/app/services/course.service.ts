@@ -2,11 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environments';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { ApiResponseList } from '../models/student/student.model';
+import { ApiResponse, ApiResponseList, CourseM } from '../models/student/student.model';
 import { JoinCourseDTO } from '../models/course/course.dto';
-import { ApiResponseDTOList } from '../models/student/student.dto';
-import { JoinCourseM } from '../models/course/course.model';
+import { ApiResponseDTO, ApiResponseDTOList, CourseDTO } from '../models/student/student.dto';
+import { createC, JoinCourseM } from '../models/course/course.model';
 import { MapJoinCourses } from '../models/course/course.mappers';
+import { MapApiCourse, MapCourse } from '../models/student/student.mappers';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +23,9 @@ export class CourseService {
     return this.http
       .get<ApiResponseDTOList<JoinCourseDTO>>(this.cBaseUrl, { params: httpParmas })
       .pipe(map(MapJoinCourses));
+  }
+
+  createC(course: createC): Observable<ApiResponse<CourseM>> {
+    return this.http.post<ApiResponseDTO<CourseDTO>>(this.cBaseUrl, course).pipe(map(MapApiCourse));
   }
 }

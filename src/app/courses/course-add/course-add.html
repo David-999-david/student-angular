@@ -1,1 +1,114 @@
-<p>course-add works!</p>
+<form
+  [formGroup]="form"
+  (ngSubmit)="save()"
+  class="max-w-lg w-full mx-auto rounded-lg px-5 py-5 shadow mt-2 bg-white space-y-7"
+>
+  <p class="text-center font-semibold text-lg">Create Course</p>
+  <div class="flex flex-col space-y-2">
+    <label for="name" class="text-sm font-medium">Name</label>
+    <input
+      formControlName="name"
+      placeholder="Course name"
+      class="border border-gray-300 rounded outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 px-2 py-1 placeholder:text-gray-400 text-sm"
+    />
+    @if (c.name.touched && c.name.invalid) {
+    <small class="block text-red-600">
+      @if (c.name.errors?.['required']) {Course-Name is required} @if (c.name.errors?.['minlength'])
+      {Must be at least 2}
+    </small>
+    }
+  </div>
+  <div class="flex flex-col space-y-2">
+    <label for="description" class="text-sm font-medium">Name</label>
+    <textarea
+      id="description"
+      formControlName="description"
+      placeholder="Description..."
+      rows="4"
+      class="border border-gray-300 rounded outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 px-2 py-1 placeholder:text-gray-400 text-sm"
+    ></textarea>
+    @if (c.description.touched && c.description.invalid) {
+    <small class="block text-red-600">
+      @if (c.description.errors?.['required']) {Description is required} @if
+      (c.description.errors?.['minlength']) {Must be at least 5}
+    </small>
+    }
+  </div>
+  <div class="flex justify-between">
+    <div class="space-y-1">
+      <div class="grid grid-cols-[140px_1fr] items-center">
+        <label for="status" class="text-sm font-medium">Status</label>
+        <select
+          id="status"
+          formControlName="status"
+          class="border rounded px-1 text-sm py-1 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+        >
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div class="space-y-1">
+      <div class="grid grid-cols-[70px_1fr] items-center">
+        <label for="student_limit" class="text-sm font-medium">Limit</label>
+        <input
+          id="student_limit"
+          formControlName="student_limit"
+          class="border rounded w-[140px] px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+        />
+      </div>
+      @if (c.student_limit.touched && c.student_limit.invalid) {
+      <small class="block text-red-600">
+        @if (c.student_limit.errors?.['required']) {Limit is required} @if
+        (c.student_limit.errors?.['min']) {Limit must be at least 5}
+      </small>
+      }
+    </div>
+  </div>
+  <div class="flex justify-between">
+    <div class="space-y-1">
+      <div class="grid grid-cols-[80px_1fr] items-center">
+        <label for="start_date" class="text-sm font-medium">Start Date</label>
+        <input
+          id="start_date"
+          formControlName="start_date"
+          class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+          type="date"
+        />
+      </div>
+      @if (c.start_date.touched && c.end_date.invalid) {
+      <small class="block text-red-600">
+        @if (c.start_date.errors?.['required']) {Start Date is required}
+      </small>
+      }
+    </div>
+    <div class="space-y-1">
+      <div class="grid grid-cols-[70px_1fr] items-center">
+        <label for="end_date" class="text-sm font-medium">End Date</label>
+        <input
+          id="end_date"
+          formControlName="end_date"
+          class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+          type="date"
+        />
+      </div>
+      @if (c.end_date.touched && c.end_date.invalid) {
+      <small class="block text-red-600">
+        @if (c.end_date.errors?.['required']) {End Date is required}
+      </small>
+      } @if (form.hasError('dateOrder')) {
+      <small class="block text-red-600"> End Date must after Start Date </small>
+      }
+    </div>
+  </div>
+  <button
+  [disabled]="saving()" type="submit"
+  class="
+  text-sm block mx-auto border px-1 py-1 rounded
+  bg-blue-200 hover:bg-blue-400 hover:text-white
+  "
+  >
+  @if (saving()) {Saving} 
+  @if (!saving()) {Create}
+</button>
+</form>

@@ -64,6 +64,14 @@ export function MapJoinStudent(dto: ApiResponseDTO<JoinStudentDTO>): ApiResponse
   };
 }
 
+export function MapApiCourse(dto: ApiResponseDTO<CourseDTO>) : ApiResponse<CourseM>{
+  return {
+    error: dto.error,
+    success: dto.success,
+    data: MapCourse(dto.data)
+  }
+}
+
 export function MapStudent(dto: StudentDTO): StudentM {
   return {
     id: dto.id,

@@ -13,3 +13,12 @@ export interface JoinCourseM {
     createdAt: Date;
     students: StudentM[];
 }
+
+export interface createC {
+    name: string;
+    description: string;
+    status: boolean;
+    student_limit: number;
+    start_date: string;
+    end_date: string;
+}
