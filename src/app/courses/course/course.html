@@ -75,6 +75,7 @@
           <th class="px-2 py-1">Status</th>
           <th class="px-5 py-1">Start-Date</th>
           <th class="px-5 py-1">End-Date</th>
+          <th class="px-3"></th>
         </tr>
       </thead>
       <tbody class="divide-y">
@@ -99,6 +100,17 @@
           </td>
           <td class="px-5 w-48">{{ c.start_date }}</td>
           <td class="px-5 py-2 w-48">{{ c.end_date }}</td>
+          <td>
+            @if (onDeleteId() === c.id) {
+              <ng-icon name="heroArrowPath"></ng-icon>
+            } @else {
+              <ng-icon name="heroArchiveBoxXMark"
+              (click)="delete(c.id);
+              $event.stopPropagation(); $event.preventDefault()
+              "
+              ></ng-icon>
+            }
+          </td>
         </tr>
         }
       </tbody>

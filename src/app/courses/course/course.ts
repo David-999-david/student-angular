@@ -186,4 +186,23 @@ export class Course implements OnInit {
     const len = Math.max(1, Math.floor(n || 1));
     return Array.from({ length: len }, (_, i) => i + 1);
   }
+
+  onDeleteId = signal<number | null>(null);
+
+  delete(id: number) {
+    this.onDeleteId.set(id);
+
+    this.service.deleteC(id).subscribe({
+      next: () => {
+        this.refresh$.next();
+        this.flash.set('Delete Success');
+        setTimeout(() => this.flash.set(null), 3000);
+      },
+      error: (err) => {
+        const msg = typeof err?.error === 'string' ? err?.error : err?.message ?? 'Delete Failed';
+        this.flash.set(msg);
+        setTimeout(() => this.flash.set(null), 3000);
+      },
+    });
+  }
 }

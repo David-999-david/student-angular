@@ -68,31 +68,33 @@
       }
     </div>
   </div>
-  <div class="flex flex-col  sm:flex-row sm:justify-between space-y-5">
+  <div class="flex flex-col space-y-5">
     <div class="space-y-1">
-      <div class="grid grid-cols-[140px_1fr] sm:grid-cols-[80px_1fr] items-center">
+      <div class="grid grid-cols-[140px_1fr] items-center">
         <label for="start_date" class="text-sm font-medium">Start Date</label>
         <input
           id="start_date"
           formControlName="start_date"
           class="border rounded  w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
-          type="date"
+          type="datetime-local"
+          step="1"
         />
       </div>
-      @if (c.start_date.touched && c.end_date.invalid) {
+      @if (c.start_date.touched && c.start_date.invalid) {
       <small class="block text-red-600">
         @if (c.start_date.errors?.['required']) {Start Date is required}
       </small>
       }
     </div>
     <div class="space-y-1">
-      <div class="grid grid-cols-[140px_1fr] sm:grid-cols-[70px_1fr] items-center">
+      <div class="grid grid-cols-[140px_1fr] items-center">
         <label for="end_date" class="text-sm font-medium">End Date</label>
         <input
           id="end_date"
           formControlName="end_date"
           class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
-          type="date"
+          type="datetime-local"
+          step="1"
         />
       </div>
       @if (c.end_date.touched && c.end_date.invalid) {

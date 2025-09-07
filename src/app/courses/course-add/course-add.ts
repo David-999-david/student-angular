@@ -36,27 +36,46 @@ export class CourseAdd {
     { validators: this.dateOrderValidator('start_date', 'end_date', false) }
   );
 
-  pickedDateToIso(pickedDate: string) {
-    if (!pickedDate) return null;
-    const [y, m, d] = pickedDate.split('-').map(Number);
-    return new Date(y, m - 1, d, 0, 0, 0).toISOString();
+  private praseLocalDateOrDateTime(input: unknown): Date | null {
+    if (!input || typeof input !== 'string') {
+      return input instanceof Date ? input : null;
+    }
+    const m = input.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})?))?$/);
+    if (!m) {
+      const d = new Date(input);
+      return isNaN(+d) ? null : d;
+    }
+
+    const [, y, mo, d, hh = '00', mi = '00', ss = '00'] = m;
+    return new Date(Number(y), Number(mo) - 1, Number(d), Number(hh), Number(mi), Number(ss));
   }
 
-  toDate(v: unknown): Date | null {
-    if (!v) return null;
-    if (v instanceof Date) return v;
-    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) {
-      const [y, m, d] = v.split('-').map(Number);
-      return new Date(y, m - 1, d);
-    }
-    const d = new Date(v as any);
-    return isNaN(+d) ? null : d;
+  // pickedDateToIso(pickedDate: string) : string | null {
+  //   if (!pickedDate) return null;
+  //   const [y, m, d] = pickedDate.split('-').map(Number);
+  //   return new Date(y, m - 1, d).toISOString();
+  // }
+
+  pickedDateToIso(pickedDate: string): string | null {
+    const d = this.praseLocalDateOrDateTime(pickedDate);
+    return d ? d.toISOString() : null;
   }
+
+  // toDate(v: unknown): Date | null {
+  //   if (!v) return null;
+  //   if (v instanceof Date) return v;
+  //   if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) {
+  //     const [y, m, d] = v.split('-').map(Number);
+  //     return new Date(y, m - 1, d);
+  //   }
+  //   const d = new Date(v as any);
+  //   return isNaN(+d) ? null : d;
+  // }
 
   dateOrderValidator(start = 'start_date', end = 'end_date', allowSameDay = false): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-      const s = this.toDate(group.get(start)?.value);
-      const e = this.toDate(group.get(end)?.value);
+      const s = this.praseLocalDateOrDateTime(group.get(start)?.value);
+      const e = this.praseLocalDateOrDateTime(group.get(end)?.value);
       if (!s || !e) return null;
       const ok = allowSameDay ? e >= s : e > s;
       return ok ? null : { dateOrder: true };

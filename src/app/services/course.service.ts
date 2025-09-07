@@ -37,7 +37,11 @@ export class CourseService {
 
   updateC(id: number, course: updateC): Observable<ApiResponse<CourseM>> {
     return this.http
-    .put<ApiResponseDTO<CourseDTO>>(`${this.cBaseUrl}/${id}`,course)
-    .pipe(map(MapApiCourse))
+      .put<ApiResponseDTO<CourseDTO>>(`${this.cBaseUrl}/${id}`, course)
+      .pipe(map(MapApiCourse));
+  }
+
+  deleteC(id: number) {
+    return this.http.delete(`${this.cBaseUrl}/${id}`);
   }
 }

@@ -111,42 +111,76 @@ export class CourseDetail {
       name: c.name,
       description: c.description,
       status: c.status,
-      start_date: this.formDate(c.start_date),
-      end_date: this.formDate(c.end_date),
+      start_date: this.toDateTimeLocal(c.start_date),
+      end_date: this.toDateTimeLocal(c.end_date),
       limit: c.limit.toString(),
     });
   }
 
-  private formDate(d: Date | string): string {
-    const date = new Date(d);
-    return date.toISOString().split('T')[0];
+  // private formDate(d: Date | string): string {
+  //   const date = new Date(d);
+  //   return date.toISOString().split('T')[0];
+  // }
+
+  toDateTimeLocal(val : string | Date | undefined | null) : string {
+    if (!val) return '';
+    const d = new Date(val);
+    if (isNaN(d.getTime())) return '';
+    const pad = (n: number) => String(n).padStart(2,'0');
+    const yyyy = d.getFullYear();
+    const mm = pad(d.getMonth() + 1);
+    const dd = pad(d.getDate());
+    const hh = pad(d.getHours());
+    const mi = pad(d.getMinutes());
+    const ss = pad(d.getSeconds());
+    return `${yyyy}-${mm}-${dd}T${hh}:${mi}:${ss}`
+
   }
 
-  toDate(v: unknown): Date | null {
-    if (!v) return null;
-    if (v instanceof Date) return v;
-    if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) {
-      const [y, m, d] = v.split('-').map(Number);
-      return new Date(y, m - 1, d);
+  // toDate(v: unknown): Date | null {
+  //   if (!v) return null;
+  //   if (v instanceof Date) return v;
+  //   if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v)) {
+  //     const [y, m, d] = v.split('-').map(Number);
+  //     return new Date(y, m - 1, d);
+  //   }
+  //   const d = new Date(v as any);
+  //   return isNaN(+d) ? null : d;
+  // }
+
+  praseDateTimeLocal(input: unknown): Date | null {
+    if (!input || typeof input !== 'string') {
+      return input instanceof Date ? input : null;
     }
-    const d = new Date(v as any);
-    return isNaN(+d) ? null : d;
+    const m = input.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+    if (!m) {
+      const d = new Date(input);
+      return isNaN(+d) ? null : d;
+    }
+
+    const [, y, mo, d, hh = '00', mi = '00', ss = '00'] = m;
+    return new Date(Number(y), Number(mo) - 1, Number(d), Number(hh), Number(mi), Number(ss));
   }
 
   dateOrderValidator(start = 'start_date', end = 'end_date', allowSameDay = false): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-      const s = this.toDate(group.get(start)?.value);
-      const e = this.toDate(group.get(end)?.value);
+      const s = this.praseDateTimeLocal(group.get(start)?.value);
+      const e = this.praseDateTimeLocal(group.get(end)?.value);
       if (!s || !e) return null;
       const ok = allowSameDay ? e >= s : e > s;
       return ok ? null : { dateOrder: true };
     };
   }
 
-  pickedDateToIso(pickedDate: string) {
-    if (!pickedDate) return null;
-    const [y, m, d] = pickedDate.split('-').map(Number);
-    return new Date(y, m - 1, d, 0, 0, 0).toISOString();
+  // pickedDateToIso(pickedDate: string) {
+  //   if (!pickedDate) return null;
+  //   const [y, m, d] = pickedDate.split('-').map(Number);
+  //   return new Date(y, m - 1, d, 0, 0, 0).toISOString();
+  // }
+
+  pickedDateToIso(pickedDate: string): string | null {
+    const d = this.praseDateTimeLocal(pickedDate);
+    return d ? d.toISOString() : null;
   }
 
   saving = signal(false);
@@ -154,6 +188,7 @@ export class CourseDetail {
   flash = signal<string | null>(null);
 
   save() {
+    this.errorMsg = null;
     if (this.form.invalid) {
       return this.form.markAllAsTouched();
     }
