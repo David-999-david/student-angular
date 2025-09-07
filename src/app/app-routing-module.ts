@@ -6,6 +6,7 @@ import { StudentAdd } from './students/student-add/student-add';
 import { StudentEdit } from './students/student-edit/student-edit';
 import { StudentDetail } from './students/student-detail/student-detail';
 import { CourseAdd } from './courses/course-add/course-add';
+import { CourseDetail } from './courses/course-detail/course-detail';
 
 const routes: Routes = [
   { path: '', redirectTo: 'students', pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes: Routes = [
     children: [
       { path: '', component: Course },
       { path: 'new', component: CourseAdd },
+      { path: ':id/detail', component: CourseDetail },
     ],
   },
   { path: '**', redirectTo: 'students' },

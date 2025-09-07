@@ -1,6 +1,6 @@
-import { ApiResponseDTOList } from '../student/student.dto';
-import { MapStudent } from '../student/student.mappers';
-import { ApiResponseList } from '../student/student.model';
+import { ApiResponseDTO, ApiResponseDTOList, CourseDTO } from '../student/student.dto';
+import { MapCourse, MapStudent } from '../student/student.mappers';
+import { ApiResponse, ApiResponseList, CourseM } from '../student/student.model';
 import { JoinCourseDTO } from './course.dto';
 import { JoinCourseM } from './course.model';
 
@@ -21,13 +21,30 @@ export function MapJCourse(dto: JoinCourseDTO): JoinCourseM {
   };
 }
 
-export function MapJoinCourses(dto: ApiResponseDTOList<JoinCourseDTO>)
-: ApiResponseList<JoinCourseM> {
-    return {
-        error: dto.error,
-        success: dto.success,
-        meta: dto.meta,
-        data: dto.data.map(MapJCourse)
-    }
+export function MapJoinCourses(
+  dto: ApiResponseDTOList<JoinCourseDTO>
+): ApiResponseList<JoinCourseM> {
+  return {
+    error: dto.error,
+    success: dto.success,
+    meta: dto.meta,
+    data: dto.data.map(MapJCourse),
+  };
 }
 
+export function MapJoinCourse(dto: ApiResponseDTO<JoinCourseDTO>): ApiResponse<JoinCourseM> {
+  return {
+    error: dto.error,
+    success: dto.success,
+    data: MapJCourse(dto.data),
+  };
+}
+
+
+export function MapApiCourse(dto: ApiResponseDTO<CourseDTO>): ApiResponse<CourseM> {
+  return {
+    error: dto.error,
+    success: dto.success,
+    data: MapCourse(dto.data),
+  };
+}

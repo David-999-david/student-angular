@@ -1,0 +1,232 @@
+@defer (on viewport){ @if (vm$ | async; as v) {
+<div class="px-5 py-4">
+  @if (v.e){
+  <div>
+    <form
+      [formGroup]="form"
+      (ngSubmit)="save()"
+      class="max-w-md sm:max-w-lg w-full mx-auto rounded-lg px-7 py-5 shadow mt-2 bg-white space-y-4"
+    >
+      <p class="font-semibold text-lg">Edit Course</p>
+      <div class="flex flex-col space-y-2">
+        <label for="name" class="text-sm font-medium">Name</label>
+        <input
+          formControlName="name"
+          placeholder="Course name"
+          class="border border-gray-300 rounded outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 px-2 py-1 placeholder:text-gray-400 text-sm"
+        />
+      </div>
+      <div class="flex flex-col space-y-2">
+        <label for="description" class="text-sm font-medium">Name</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          placeholder="Description..."
+          rows="4"
+          class="border border-gray-300 rounded outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 px-2 py-1 placeholder:text-gray-400 text-sm"
+        ></textarea>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:justify-between space-y-5">
+        <div class="space-y-1">
+          <div class="grid grid-cols-[140px_1fr] items-center">
+            <label for="status" class="text-sm font-medium">Status</label>
+            <select
+              id="status"
+              formControlName="status"
+              class="border rounded px-1 text-sm py-1 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+            >
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="grid grid-cols-[140px_1fr] sm:grid-cols-[70px_1fr] items-center">
+            <label for="limit" class="text-sm font-medium">Limit</label>
+            <input
+              id="limit"
+              formControlName="limit"
+              placeholder="Student-limit"
+              class="border placeholder:text-gray-400 rounded w-full sm:w-[140px] px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+            />
+          </div>
+          @if (c.limit.touched && c.limit.invalid) {
+          <small class="block text-red-600">
+            @if (c.limit.errors?.['required']) {Limit is required} @if (c.limit.errors?.['min'])
+            {Limit must be at least 5}
+          </small>
+          }
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:justify-between space-y-5">
+        <div class="space-y-1">
+          <div class="grid grid-cols-[140px_1fr] sm:grid-cols-[80px_1fr] items-center">
+            <label for="start_date" class="text-sm font-medium">Start Date</label>
+            <input
+              id="start_date"
+              formControlName="start_date"
+              class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+              type="date"
+            />
+          </div>
+          @if (c.start_date.touched && c.end_date.invalid) {
+          <small class="block text-red-600">
+            @if (c.start_date.errors?.['required']) {Start Date is required}
+          </small>
+          }
+        </div>
+        <div class="space-y-1">
+          <div class="grid grid-cols-[140px_1fr] sm:grid-cols-[70px_1fr] items-center">
+            <label for="end_date" class="text-sm font-medium">End Date</label>
+            <input
+              id="end_date"
+              formControlName="end_date"
+              class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+              type="date"
+            />
+          </div>
+          @if (c.end_date.touched && c.end_date.invalid) {
+          <small class="block text-red-600">
+            @if (c.end_date.errors?.['required']) {End Date is required}
+          </small>
+          } @if (form.hasError('dateOrder')) {
+          <small class="block text-red-600"> End Date must after Start Date </small>
+          }
+        </div>
+      </div>
+      <div class="flex justify-start gap-2">
+        <button
+          [disabled]="saving()"
+          type="submit"
+          class="border rounded px-2 text-sm pb-0.5
+            bg-green-300
+            border-none
+            shadow hover:bg-green-400 hover:text-white"
+        >
+          @if (saving()) {Saving} @if (!saving()) {Save}
+        </button>
+        <button
+        [disabled]="saving()"
+        type="submit"
+        class="text-sm block  border px-1 py-0.5 rounded bg-gray-400 hover:bg-gray-500 text-white"
+      >
+        Cancel
+      </button>
+      </div>
+    </form>
+  </div>
+  } @else {
+  <div
+    class="flex flex-col space-y-4 shadow bg-[#FBFBFB] w-full max-w-full sm:w-auto mx-auto sm:max-w-xl rounded px-5 py-3"
+  >
+    <div class="flex justify-between items-center">
+      <span
+        class="text-sm border border-none shadow rounded px-2 py-0.5"
+        [class.bg-green-300]="v.c.status"
+        [class.bg-red-200]="!v.c.status"
+      >
+        {{ v.c.status ? 'Active' : 'Inactive' }}
+      </span>
+      <div class="flex items-center gap-x-4">
+        @if (flash()) {
+            <p
+            class="text-sm
+            border border-none shadow rounded
+            bg-green-200
+            px-2 py-0.5
+
+            "
+            >{{flash()}}</p>
+        }
+        <ng-icon
+        name="heroPencilSquare"
+        class="bg-green-200 rounded text-[16px]"
+        (click)="onClick()"
+      ></ng-icon>
+      </div>
+    </div>
+    <div class="flex items-center justify-between w-full">
+      <div class="grid grid-cols-[110px_1fr]">
+        <span class="text-sm font-medium">Name:</span>
+        <p class="text-sm">
+          {{ v.c.name.toUpperCase() }}
+        </p>
+      </div>
+      <div class="ml-10 border border-none rounded bg-green-100 px-2">
+        <span class="text-lg font-medium">{{ v.c.current }}/</span>
+        <span class="text-sm">{{ v.c.limit }}</span>
+      </div>
+    </div>
+    <div class="grid grid-cols-[110px_1fr]">
+      <span class="text-sm font-medium">Description:</span>
+      <p class="text-sm">
+        {{ v.c.description }}
+      </p>
+    </div>
+    <div class="flex flex-col sm:flex-row w-full">
+      <div class="grid grid-cols-[110px_1fr] w-1/2 sm:pr-10">
+        <span class="text-sm font-medium">Start Date:</span>
+        <p class="text-sm">
+          {{ v.c.start_date }}
+        </p>
+      </div>
+      <div class="grid grid-cols-[110px_1fr] w-1/2 sm:pl-13">
+        <span class="text-sm font-medium">End Date:</span>
+        <p class="text-sm">
+          {{ v.c.end_date }}
+        </p>
+      </div>
+    </div>
+  </div>
+  } @if (v.c.students.length === 0) {
+  <p class="text-center text-sm text-white font-medium mt-30">There is no students</p>
+  } @else {
+  <div
+    class="relative overflow-x-auto  border border-none rounded mt-5 bg-[#FBFBFB] border-gray-300 shadow"
+  >
+    <table class="table-auto min-w-full">
+      <thead class="text-sm font-medium text-left">
+        <tr class="bg-gray-300">
+          <th class="px-3 py-1">No.</th>
+          <th class="px-3">Name</th>
+          <th class="px-3">Email</th>
+          <th class="px-3">Phone</th>
+          <th class="px-3">Address</th>
+          <th class="px-3">Status</th>
+          <th class="px-3">Gender</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y">
+        @for (s of v.c.students; track s.id; let i = $index) {
+        <tr class="text-sm odd:bg-white even:bg-gray-100">
+          <td class="px-3 py-1">{{ i + 1 }}</td>
+          <td class="px-3">{{ s.name }}</td>
+          <td class="px-3">{{ s.email }}</td>
+          <td class="px-3">{{ s.phone }}</td>
+          <td class="px-3">{{ s.address }}</td>
+          <td
+            class="px-3"
+            [class.bg-green-100]="s.status"
+            [class.text-700]="s.status"
+            [class.bg-red-100]="!s.status"
+            [class.text-gray-700]="!s.status"
+          >
+            {{ s.status ? 'Active' : 'Inactive' }}
+          </td>
+          <td class="px-3">{{ s.gender }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>
+} @else {
+<p>Failed to Load Course detail</p>
+} } @placeholder {
+<p>Loading...</p>
+} @loading {
+<p>Loading...</p>
+} @error {
+<p>Couldn't load course detail</p>
+}

@@ -14,9 +14,10 @@ import { StudentAdd } from './students/student-add/student-add';
 import { StudentEdit } from './students/student-edit/student-edit';
 import { StudentDetail } from './students/student-detail/student-detail';
 import { CourseAdd } from './courses/course-add/course-add';
+import { CourseDetail } from './courses/course-detail/course-detail';
 
 @NgModule({
-  declarations: [App, Student, Course, StudentAdd, StudentEdit, StudentDetail, CourseAdd],
+  declarations: [App, Student, Course, StudentAdd, StudentEdit, StudentDetail, CourseAdd, CourseDetail],
   imports: [
     BrowserModule,
     NgIconsModule.withIcons({

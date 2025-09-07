@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { CourseService } from '../../services/course.service';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -53,6 +53,8 @@ export class Course implements OnInit {
     nonNullable: true,
   });
 
+  flash = signal<string | null>(null);
+
   ngOnInit(): void {
     this.qc.valueChanges
       .pipe(
@@ -79,6 +81,17 @@ export class Course implements OnInit {
       .subscribe((v) => {
         if (this.qc.value !== v) this.qc.setValue(v, { emitEvent: false });
       });
+
+    const s = history.state as { flash?: string };
+
+    if (typeof s?.flash === 'string' && s.flash.trim()) {
+      this.flash.set(s.flash);
+    }
+
+    const { flash, ...rest } = s;
+    history.replaceState(rest, document.title);
+
+    setTimeout(() => this.flash.set(null), 3000);
   }
 
   hasQuery = this.route.queryParamMap.pipe(

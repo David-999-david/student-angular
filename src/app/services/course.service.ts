@@ -5,8 +5,8 @@ import { map, Observable } from 'rxjs';
 import { ApiResponse, ApiResponseList, CourseM } from '../models/student/student.model';
 import { JoinCourseDTO } from '../models/course/course.dto';
 import { ApiResponseDTO, ApiResponseDTOList, CourseDTO } from '../models/student/student.dto';
-import { createC, JoinCourseM } from '../models/course/course.model';
-import { MapJoinCourses } from '../models/course/course.mappers';
+import { createC, JoinCourseM, updateC } from '../models/course/course.model';
+import { MapJCourse, MapJoinCourse, MapJoinCourses } from '../models/course/course.mappers';
 import { MapApiCourse, MapCourse } from '../models/student/student.mappers';
 
 @Injectable({
@@ -27,5 +27,17 @@ export class CourseService {
 
   createC(course: createC): Observable<ApiResponse<CourseM>> {
     return this.http.post<ApiResponseDTO<CourseDTO>>(this.cBaseUrl, course).pipe(map(MapApiCourse));
+  }
+
+  getIdC(id: number): Observable<ApiResponse<JoinCourseM>> {
+    return this.http
+      .get<ApiResponseDTO<JoinCourseDTO>>(`${this.cBaseUrl}/${id}`)
+      .pipe(map(MapJoinCourse));
+  }
+
+  updateC(id: number, course: updateC): Observable<ApiResponse<CourseM>> {
+    return this.http
+    .put<ApiResponseDTO<CourseDTO>>(`${this.cBaseUrl}/${id}`,course)
+    .pipe(map(MapApiCourse))
   }
 }
