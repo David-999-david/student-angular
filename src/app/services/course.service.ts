@@ -3,7 +3,7 @@ import { environment } from '../../environments/environments';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ApiResponse, ApiResponseList, CourseM } from '../models/student/student.model';
-import { JoinCourseDTO } from '../models/course/course.dto';
+import { JoinCourseDTO, JoinCResultDTO } from '../models/course/course.dto';
 import { ApiResponseDTO, ApiResponseDTOList, CourseDTO } from '../models/student/student.dto';
 import { createC, JoinCourseM, updateC } from '../models/course/course.model';
 import { MapJCourse, MapJoinCourse, MapJoinCourses } from '../models/course/course.mappers';
@@ -43,5 +43,15 @@ export class CourseService {
 
   deleteC(id: number) {
     return this.http.delete(`${this.cBaseUrl}/${id}`);
+  }
+
+  joinS(id: number, ids: number[]): Observable<ApiResponse<JoinCResultDTO>> {
+    return this.http.post<ApiResponse<JoinCResultDTO>>(`${this.cBaseUrl}/${id}/join`, {
+      studentIds: ids,
+    });
+  }
+
+  cancelJoinC(id: number, sId: number) {
+    return this.http.delete(`${this.cBaseUrl}/${id}/join/cancel`, { body: { studentId: sId } });
   }
 }

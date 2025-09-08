@@ -170,6 +170,7 @@ export class StudentDetail {
 
   cancel() {
     this.setFormValue(this.currentStudent, this.genders);
+    this.flash.set(null);
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { edit: null },

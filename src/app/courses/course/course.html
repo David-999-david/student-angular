@@ -102,13 +102,14 @@
           <td class="px-5 py-2 w-48">{{ c.end_date }}</td>
           <td>
             @if (onDeleteId() === c.id) {
-              <ng-icon name="heroArrowPath"></ng-icon>
+            <ng-icon name="heroArrowPath"></ng-icon>
             } @else {
-              <ng-icon name="heroArchiveBoxXMark"
-              (click)="delete(c.id);
-              $event.stopPropagation(); $event.preventDefault()
-              "
-              ></ng-icon>
+            <button
+              class="inline-flex justify-center items-center px-1 py-0.5 border border-none rounded bg-red-300 text-white cursor-pointer hover:bg-red-400 hover:scale-110"
+              (click)="delete(c.id); $event.stopPropagation(); $event.preventDefault()"
+            >
+              <ng-icon name="heroArchiveBoxXMark" size="15"></ng-icon>
+            </button>
             }
           </td>
         </tr>

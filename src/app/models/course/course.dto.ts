@@ -12,3 +12,9 @@ export interface JoinCourseDTO {
   created_at: string;
   students: StudentDTO[];
 }
+
+export interface JoinCResultDTO {
+  joins: number[];
+  skips: number[];
+  courseFull: boolean;
+}

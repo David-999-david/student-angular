@@ -66,7 +66,8 @@
               id="start_date"
               formControlName="start_date"
               class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
-              type="datetime-local" step="1"
+              type="datetime-local"
+              step="1"
             />
           </div>
           @if (c.start_date.touched && c.start_date.invalid) {
@@ -82,7 +83,8 @@
               id="end_date"
               formControlName="end_date"
               class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
-              type="datetime-local" step="1"
+              type="datetime-local"
+              step="1"
             />
           </div>
           @if (c.end_date.touched && c.end_date.invalid) {
@@ -98,26 +100,25 @@
         <button
           [disabled]="saving()"
           type="submit"
-          class="border rounded px-2 text-sm pb-0.5
-            bg-green-300
-            border-none
-            shadow hover:bg-green-400 hover:text-white"
+          class="border rounded px-2 text-sm pb-0.5 bg-green-300 border-none shadow hover:bg-green-400 hover:text-white"
         >
           @if (saving()) {Saving} @if (!saving()) {Save}
         </button>
         <button
-        [disabled]="saving()"
-        type="submit"
-        class="text-sm block  border px-1 py-0.5 rounded bg-gray-400 hover:bg-gray-500 text-white"
-      >
-        Cancel
-      </button>
+          [disabled]="saving()"
+          type="button"
+          (click)="cancel()"
+          class="text-sm block border px-1 py-0.5 rounded bg-gray-400 hover:bg-gray-500 text-white"
+        >
+          Cancel
+        </button>
       </div>
     </form>
   </div>
   } @else {
   <div
     class="flex flex-col space-y-4 shadow bg-[#FBFBFB] w-full max-w-full sm:w-auto mx-auto sm:max-w-xl rounded px-5 py-3"
+    [ngClass]="v.j ? ['sticky', 'top-5', 'z-30'] : []"
   >
     <div class="flex justify-between items-center">
       <span
@@ -129,20 +130,37 @@
       </span>
       <div class="flex items-center gap-x-4">
         @if (flash()) {
-            <p
-            class="text-sm
-            border border-none shadow rounded
-            bg-green-200
-            px-2 py-0.5
-
-            "
-            >{{flash()}}</p>
+        <p
+          class="text-sm border border-none shadow rounded bg-green-200 px-2 py-0.5"
+          [ngClass]="{
+            'bg-red-400': flash() === 'Status is Inactive' || flash() === 'Limit reach!',
+            'text-white': flash() === 'Status is Inactive' || flash() === 'Limit reach!'
+          }"
+        >
+          {{ flash() }}
+        </p>
         }
-        <ng-icon
-        name="heroPencilSquare"
-        class="bg-green-200 rounded text-[16px]"
-        (click)="onClick()"
-      ></ng-icon>
+        <button
+          class="inline-flex justify-center items-center bg-green-200 rounded text-[16px] cursor-pointer hover:scale-110 px-0.5 py-0.5"
+          (click)="onClick()"
+        >
+          <ng-icon name="heroPencilSquare"></ng-icon>
+        </button>
+        @if (v.j) {
+        <button
+          class="inline-flex justify-center item-center bg-green-200 text-[16px] rounded cursor-pointer hover:scale-110 px-0.5 py-0.5"
+          (click)="cancelJoin()"
+        >
+          <ng-icon name="heroArrowUturnLeft"></ng-icon>
+        </button>
+        } @else {
+        <button
+          class="inline-flex justify-center item-center bg-green-200 text-[16px] rounded cursor-pointer hover:scale-110 px-0.5 py-0.5"
+          (click)="makeJoin()"
+        >
+          <ng-icon name="heroUserPlus"></ng-icon>
+        </button>
+        }
       </div>
     </div>
     <div class="flex items-center justify-between w-full">
@@ -178,11 +196,128 @@
       </div>
     </div>
   </div>
-  } @if (v.c.students.length === 0) {
+  } @if (v.j) { @if (joinSIds().size > 0) {
+  <div class="sticky top-85 sm:top-65 z-30 rounded border border-none bg-white px-3 py-1 mt-4 mb-4">
+    <div class="flex justify-between mt-3 text-sm">
+      <button
+        class="border border-none rounded px-2 py-0.5 bg-red-200 hover:bg-red-300 cursor-pointer"
+        (click)="removeAll()"
+      >
+        Clear All
+      </button>
+      <button
+        class="border border-none rounded px-2 py-0.5 bg-blue-200 hover:bg-blue-400 cursor-pointer"
+        (click)="joinS()"
+      >
+        {{ joining() ? 'Joining...' : 'Join' }}
+      </button>
+    </div>
+    <div class="flex flex-wrap gap-5 mt-4 mb-4">
+      @for (s of joinSList(); track s.id) {
+      <button
+        class="flex items-center text-sm bg-zinc-300 rounded px-2 py-1 cursor-pointer"
+        (click)="onJoin(s)"
+      >
+        {{ s.name }}
+        <ng-icon name="heroXMark" class="mt-0.5" color="black"></ng-icon>
+      </button>
+      }
+    </div>
+  </div>
+  }
+  <div class="flex justify-between mt-4">
+    <input
+      type="search"
+      placeholder="Search By Name"
+      class="placeholder:text-gray-400 bg-white border border-black outline-none focus:border-blue-500 text-sm px-2 py-1 rounded mr-2"
+      [formControl]="search"
+    />
+    <div class="flex">
+      <button
+        class="text-sm px-1 rounded border-none shadow border bg-white hover:bg-gray-200 cursor-pointer mr-6"
+        [disabled]="v.q.p == 1"
+        (click)="prevPage(v.q.p)"
+      >
+        Prev
+      </button>
+      @for (p of range(v.f.m.totalPages); track p) {
+      <button
+        class="text-[#FF9A00] px-2 cursor-pointer text-sm ml-2 mr-2"
+        [class.bg-white]="p == v.q.p"
+        [class.rounded]="p == v.q.p"
+        [class.bg-blue-200]="p == v.q.p"
+        (click)="goToPage(p)"
+      >
+        {{ p }}
+      </button>
+      }
+      <button
+        class="text-sm px-1 rounded border-none shadow border bg-white hover:bg-gray-200 ml-2 mr-1 cursor-pointer"
+        [disabled]="v.q.p == v.f.m.totalPages"
+        (click)="nextPage(v.q.p)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+  @if (filteredStudents.length === 0) {
+  <p>There is no students for join</p>
+  } @else {
+  <div class="flex justify-between mb-2 ml-1 mt-1"></div>
+  <div class="pb-5 px-1">
+    <div class="relative overflow-x-auto border border-gray-300 shadow mx-auto rounded">
+      <table class="table-auto min-w-full">
+        <thead class="bg-gray-200">
+          <tr class="text-left text-sm">
+            <th class="px-3">No.</th>
+            <th class="px-3 py-1.5">Name</th>
+            <th class="px-3">Eamil</th>
+            <th class="px-3">Phone</th>
+            <th class="px-3">Address</th>
+            <th class="px-3">Gender</th>
+            <th class="px-3">Status</th>
+            <th class="px-3">Courses</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          @for (st of filteredStudents; track st.id ; let i = $index){
+          <tr
+            class="text-sm cursor-pointer"
+            (click)="onJoin(st)"
+            [ngClass]="{
+              'bg-blue-200': isSelected(st.id),
+              'odd:bg-white': !isSelected(st.id),
+              'even:bg-gray-100': !isSelected(st.id)
+            }"
+            [class.bg-blue-200]="isSelected(st.id)"
+          >
+            <td class="px-3 w-24">{{ i + 1 }}</td>
+            <td class="px-3 py-2 w-40">{{ st.name }}</td>
+            <td class="px-3 w-40">{{ st.email }}</td>
+            <td class="px-3 w-48px">{{ st.phone }}</td>
+            <td class="px-3 w-fit">{{ st.address }}</td>
+            <td class="px-3 w-24">{{ st.gender }}</td>
+            <td
+              class="px-3 w-[40px]"
+              [class.bg-green-100]="st.status"
+              [class.text-green-700]="st.status"
+              [class.bg-red-100]="!st.status"
+              [class.text-gray-700]="!st.status"
+            >
+              {{ st.status ? 'Active' : 'Inactive' }}
+            </td>
+            <td class="px-3 w-40">{{ st.courses.length }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  } } @else { @if (v.c.students.length === 0) {
   <p class="text-center text-sm text-white font-medium mt-30">There is no students</p>
   } @else {
   <div
-    class="relative overflow-x-auto  border border-none rounded mt-5 bg-[#FBFBFB] border-gray-300 shadow"
+    class="relative overflow-x-auto border border-none rounded mt-5 bg-[#FBFBFB] border-gray-300 shadow"
   >
     <table class="table-auto min-w-full">
       <thead class="text-sm font-medium text-left">
@@ -194,6 +329,7 @@
           <th class="px-3">Address</th>
           <th class="px-3">Status</th>
           <th class="px-3">Gender</th>
+          <td></td>
         </tr>
       </thead>
       <tbody class="divide-y">
@@ -214,12 +350,28 @@
             {{ s.status ? 'Active' : 'Inactive' }}
           </td>
           <td class="px-3">{{ s.gender }}</td>
+          <td>
+            @if(deleteId() === s.id){
+            <ng-icon name="heroArrowPath"></ng-icon>
+            } @else {
+            <button
+            class="
+            inline-flex justify-center items-center
+            px-1 py-0.5 border border-none rounded
+            bg-red-300 text-white cursor-pointer
+            hover:bg-red-400 hover:scale-110
+            "
+            (click)="cancelJoinFn(s.id); $event.stopPropagation(); $event.preventDefault()">
+              <ng-icon name="heroMinus"></ng-icon>
+            </button>
+            }
+          </td>
         </tr>
         }
       </tbody>
     </table>
   </div>
-  }
+  } }
 </div>
 } @else {
 <p>Failed to Load Course detail</p>

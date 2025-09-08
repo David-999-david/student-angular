@@ -1,162 +1,97 @@
 @defer (on viewport) { @if (vm$ | async; as v) {
 <div class="mx-5 pb-5">
   @if (v.e) {
-  <div
-    class="flex bg-[#FBFBFB] flex-col w-fit sm:w-fit shadow rounded px-5 pb-7 pt-4 mx-auto"
-  >
+  <div class="flex bg-[#FBFBFB] flex-col w-fit sm:w-fit shadow rounded px-5 pb-7 pt-4 mx-auto">
     <div class="flex justify-between items-start">
-        <p class="font-semibold text-[20px] mb-5">Edit Student</p>
+      <p class="font-semibold text-[20px] mb-5">Edit Student</p>
     </div>
-    <form 
-    [formGroup]="form"
-    (ngSubmit)="save()"
-    class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-20 gap-y-5">
-
+    <form
+      [formGroup]="form"
+      (ngSubmit)="save()"
+      class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-20 gap-y-5"
+    >
       <div class="grid grid-cols-[80px_1fr] items-center">
-        <label
-        for="name"
-        class="text-sm
-        font-medium
-        "
-        >Name</label>
+        <label for="name" class="text-sm font-medium">Name</label>
         <input
-        id="name"
-        formControlName="name"
-        [disabled]="saving()"
-        class="
-        rounded
-        border outline-none border-gray-300
-        shadow focus:border-blue-400  focus:ring-1 focus:ring-blue-400
-        px-2 pb-0.5 text-sm w-50
-        "
-        >
+          id="name"
+          formControlName="name"
+          [disabled]="saving()"
+          class="rounded border outline-none border-gray-300 shadow focus:border-blue-400 focus:ring-1 focus:ring-blue-400 px-2 pb-0.5 text-sm w-50"
+        />
       </div>
 
       <div class="grid grid-cols-[80px_1fr] items-center">
-        <label
-        for="email"
-        class="text-sm
-        font-medium
-        "
-        >Email</label>
+        <label for="email" class="text-sm font-medium">Email</label>
         <input
-        id="email"
-        formControlName="email"
-        [disabled]="saving()"
-        class="
-        rounded
-        border outline-none border-gray-300
-        shadow focus:border-blue-400  focus:ring-1 focus:ring-blue-400
-        px-2 pb-0.5 text-sm w-50
-        "
-        >
+          id="email"
+          formControlName="email"
+          [disabled]="saving()"
+          class="rounded border outline-none border-gray-300 shadow focus:border-blue-400 focus:ring-1 focus:ring-blue-400 px-2 pb-0.5 text-sm w-50"
+        />
       </div>
 
       <div class="grid grid-cols-[80px_1fr] items-center">
-        <label
-        for="address"
-        class="text-sm
-        font-medium
-        "
-        >Address</label>
+        <label for="address" class="text-sm font-medium">Address</label>
         <textarea
-        id="address"
-        formControlName="address"
-        rows="3"
-        [disabled]="saving()"
-        class="
-        rounded
-        border outline-none border-gray-300
-        shadow focus:border-blue-400  focus:ring-1 focus:ring-blue-400
-        px-2 pb-0.5 text-sm w-50
-        "
+          id="address"
+          formControlName="address"
+          rows="3"
+          [disabled]="saving()"
+          class="rounded border outline-none border-gray-300 shadow focus:border-blue-400 focus:ring-1 focus:ring-blue-400 px-2 pb-0.5 text-sm w-50"
         ></textarea>
       </div>
 
       <div class="grid grid-cols-[80px_1fr] items-center">
-        <label
-        for="phone"
-        class="text-sm
-        font-medium
-        "
-        >Phone</label>
+        <label for="phone" class="text-sm font-medium">Phone</label>
         <input
-        id="phone"
-        formControlName="phone"
-        [disabled]="saving()"
-        class="
-        rounded
-        border outline-none border-gray-300
-        shadow focus:border-blue-400  focus:ring-1 focus:ring-blue-400
-        px-2 pb-0.5 text-sm w-50
-        "
-        >
+          id="phone"
+          formControlName="phone"
+          [disabled]="saving()"
+          class="rounded border outline-none border-gray-300 shadow focus:border-blue-400 focus:ring-1 focus:ring-blue-400 px-2 pb-0.5 text-sm w-50"
+        />
       </div>
 
       <div class="grid grid-cols-[80px_1fr] items-center">
-        <label
-        for="gender"
-        class="text-sm font-medium"
-        >Gender</label>
+        <label for="gender" class="text-sm font-medium">Gender</label>
         <select
-        id="gender"
-        formControlName="gender_id"
-        class="
-        w-40 sm:w-48
-        text-sm t w-50
-        border rounded border-gray-300 shadow
-        outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400
-        pb-0.5 px-2
-        "
+          id="gender"
+          formControlName="gender_id"
+          class="w-40 sm:w-48 text-sm t w-50 border rounded border-gray-300 shadow outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 pb-0.5 px-2"
         >
-            <option value="" class="text-sm">Select a gender</option>
-            @for (g of v.g; track g.id) {
-                <option
-                [ngValue]="g.id"
-                >{{g.gender}}</option>
-            }
+          <option value="" class="text-sm">Select a gender</option>
+          @for (g of v.g; track g.id) {
+          <option [ngValue]="g.id">{{ g.gender }}</option>
+          }
         </select>
       </div>
 
       <div class="grid grid-cols-[80px_1fr] items-center">
-        <label
-        for="status"
-        class="text-sm font-medium"
-        >Status</label>
+        <label for="status" class="text-sm font-medium">Status</label>
         <select
-        id="status"
-        formControlName="status"
-        class="text-sm w-50
-        border rounded border-gray-300 shadow
-        outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400
-        pb-0.5 px-2
-        "
+          id="status"
+          formControlName="status"
+          class="text-sm w-50 border rounded border-gray-300 shadow outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 pb-0.5 px-2"
         >
-        <option [ngValue]="true">Active</option>
-        <option [ngValue]="false">Inactive</option>
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
         </select>
       </div>
       <div class="flex gap-2">
-            <button
-            type="submit"
-            [disabled]="saving()"
-            class="
-            border rounded px-2 text-sm pb-0.5
-            bg-green-300
-            border-none
-            shadow hover:bg-green-400 hover:text-white
-            "
-            >{{saving() ? 'Saving..' : 'Save'}}</button>
-            <button
-            class="
-            border rounded px-1 text-sm pb-0.5
-            bg-gray-400 text-white
-            border-none
-            shadow hover:bg-gray-500
-            "
-            (click)="cancel()"
-            >Cancel</button>
-        </div>
+        <button
+          type="submit"
+          [disabled]="saving()"
+          class="border rounded px-2 text-sm pb-0.5 bg-green-300 border-none shadow hover:bg-green-400 hover:text-white"
+        >
+          {{ saving() ? 'Saving..' : 'Save' }}
+        </button>
+        <button
+          type="button"
+          class="border rounded px-1 text-sm pb-0.5 bg-gray-400 text-white border-none shadow hover:bg-gray-500"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   </div>
   } @else {
@@ -172,20 +107,15 @@
       >
       <div class="flex items-center gap-x-4">
         @if (flash()) {
-            <p
-            class="text-sm
-            border border-none shadow rounded
-            bg-green-200
-            px-2 py-0.5
-
-            "
-            >{{flash()}}</p>
+        <p class="text-sm border border-none shadow rounded bg-green-200 px-2 py-0.5">
+          {{ flash() }}
+        </p>
         }
-        <ng-icon
-        name="heroPencilSquare"
-        class="bg-green-200 rounded text-[16px]"
-        (click)="onClick()"
-      ></ng-icon>
+        <button class="inline-flex justify-center items-center bg-green-200 rounded text-[16px] hover:scale-110
+        px-0.5 py-0.5 cursor-pointer
+        " (click)="onClick()">
+          <ng-icon name="heroPencilSquare"></ng-icon>
+        </button>
       </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-2 sm:gap-x-20 gap-y-3 mt-3 mb-3">
@@ -211,46 +141,46 @@
       </div>
     </div>
   </div>
-  }
-  @if (v.s.courses.length === 0) {
-    <p class="text-center text-sm text-white font-medium mt-30">There is no course </p>
+  } @if (v.s.courses.length === 0) {
+  <p class="text-center text-sm text-white font-medium mt-30">There is no course</p>
   } @else {
-    <div class="relative overflow-x-auto bg-[#FBFBFB]
-    border border-gray-300 rounded shadow mt-5
-    ">
-        <table class="table-auto min-w-full">
-            <thead class="text-sm font-medium text-left">
-                <tr class="bg-gray-300">
-                    <th class="px-3 py-1">No.</th>
-                    <th  class="px-3">Name</th>
-                    <th  class="px-3">Description</th>
-                    <th  class="px-3">Limit</th>
-                    <th  class="px-3">Students</th>
-                    <th  class="px-3">Start Date</th>
-                    <th class="px-3">End Date</th>
-                    <th class="px-3">Status</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y text-sm">
-                @for (c of v.s.courses; track c.id; let i = $index) {
-                    <tr>
-                        <td  class="px-3 py-1">{{i+1}}</td>
-                        <td  class="px-3 py-1">{{c.name}}</td>
-                        <td  class="px-3 py-1">{{c.description}}</td>
-                        <td  class="px-3 py-1">{{c.limit}}</td>
-                        <td  class="px-3 py-1">{{c.current}}</td>
-                        <td  class="px-3 py-1">{{c.startDate}}</td>
-                        <td  class="px-3 py-1">{{c.endDate}}</td>
-                        <td  class="px-3 py-1"
-                        [class.bg-green-100]="c.courseStatus"
-                        [class.text-green-700]="c.courseStatus"
-                        [class.bg-red-100]="!c.courseStatus"
-                        >{{c.courseStatus ? 'Active': "Inactive"}}</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+  <div class="relative overflow-x-auto bg-[#FBFBFB] border border-gray-300 rounded shadow mt-5">
+    <table class="table-auto min-w-full">
+      <thead class="text-sm font-medium text-left">
+        <tr class="bg-gray-300">
+          <th class="px-3 py-1">No.</th>
+          <th class="px-3">Name</th>
+          <th class="px-3">Description</th>
+          <th class="px-3">Limit</th>
+          <th class="px-3">Students</th>
+          <th class="px-3">Start Date</th>
+          <th class="px-3">End Date</th>
+          <th class="px-3">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y text-sm">
+        @for (c of v.s.courses; track c.id; let i = $index) {
+        <tr>
+          <td class="px-3 py-1">{{ i + 1 }}</td>
+          <td class="px-3 py-1">{{ c.name }}</td>
+          <td class="px-3 py-1">{{ c.description }}</td>
+          <td class="px-3 py-1">{{ c.limit }}</td>
+          <td class="px-3 py-1">{{ c.current }}</td>
+          <td class="px-3 py-1">{{ c.startDate }}</td>
+          <td class="px-3 py-1">{{ c.endDate }}</td>
+          <td
+            class="px-3 py-1"
+            [class.bg-green-100]="c.courseStatus"
+            [class.text-green-700]="c.courseStatus"
+            [class.bg-red-100]="!c.courseStatus"
+          >
+            {{ c.courseStatus ? 'Active' : 'Inactive' }}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </div>
 } @else {
