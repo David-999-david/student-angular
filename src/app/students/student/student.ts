@@ -104,7 +104,7 @@ export class Student implements OnInit {
   private readonly query$ = this.route.queryParamMap.pipe(
     map((pm) => ({
       q: pm.get('q') ?? '',
-      p: parseInt(pm.get('p') ?? '1', 10) || 1 ,
+      p: parseInt(pm.get('p') ?? '1', 10) || 1,
     })),
     distinctUntilChanged()
   );
@@ -122,7 +122,7 @@ export class Student implements OnInit {
       switchMap(({ q, p }) =>
         this.service.fetchAll(q, p).pipe(
           map((res: ApiResponseList<StudentJM>) => {
-            const totalPage = Math.max(1,res.meta.totalPages ?? 1);
+            const totalPage = Math.max(1, res.meta.totalPages ?? 1);
             if (p > totalPage) {
               this.goToPage(totalPage);
             }
@@ -135,7 +135,6 @@ export class Student implements OnInit {
               totalPage: totalPage,
             } as UIState;
           }),
-          startWith({ kind: 'loading', total: 0, queryTotal: 0, page: 1, totalPage: 1 } as UIState),
           catchError(() =>
             of({
               kind: 'error',
@@ -145,7 +144,8 @@ export class Student implements OnInit {
             } as UIState)
           )
         )
-      )
+      ),
+      startWith({ kind: 'loading', total: 0, queryTotal: 0, page: 1, totalPage: 1 } as UIState)
     ),
     { requireSync: true }
   );
@@ -186,8 +186,8 @@ export class Student implements OnInit {
     this.goToPage(cur + 1);
   }
 
-  range(n: number): number[]{
+  range(n: number): number[] {
     const len = Math.max(1, Math.floor(n || 1));
-    return Array.from({length: len}, (_,i) => i+1);
+    return Array.from({ length: len }, (_, i) => i + 1);
   }
 }

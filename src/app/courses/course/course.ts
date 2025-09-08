@@ -132,13 +132,6 @@ export class Course implements OnInit {
             queryTotal: res.data.length,
           } as UIState;
         }),
-        startWith({
-          kind: 'loading',
-          page: 1,
-          total: 0,
-          queryTotal: 0,
-          totalPage: 1,
-        } as UIState),
         catchError(() =>
           of({
             kind: 'error',
@@ -150,7 +143,14 @@ export class Course implements OnInit {
           } as UIState)
         )
       )
-    )
+    ),
+    startWith({
+      kind: 'loading',
+      page: 1,
+      total: 0,
+      queryTotal: 0,
+      totalPage: 1,
+    } as UIState)
   );
 
   goToPage(p: number) {
