@@ -38,19 +38,27 @@ export class StudentDetail implements OnInit {
   private readonly destory = inject(DestroyRef);
   private readonly cS = inject(CourseService);
   private readonly dialog = inject(Dialog);
+  private enter$ = new Subject<void>();
+
+  onEnter() {
+    this.enter$.next();
+  }
 
   search = new FormControl<string>(this.route.snapshot.queryParamMap.get('q') ?? '', {
     nonNullable: true,
   });
 
   ngOnInit(): void {
-    this.search.valueChanges
-      .pipe(
-        map((val) => val.trim()),
-        debounceTime(3000),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destory)
-      )
+    const debounceSearch$ = this.search.valueChanges.pipe(
+      map((val) => val.trim()),
+      debounceTime(3000),
+      distinctUntilChanged()
+    );
+
+    const enterAction$ = this.enter$.pipe(map(() => this.search.value?.trim() ?? ''));
+
+    merge(debounceSearch$, enterAction$)
+      .pipe(takeUntilDestroyed(this.destory))
       .subscribe((val) => {
         const nextS = val.trim();
         this.router.navigate([], {
@@ -58,6 +66,7 @@ export class StudentDetail implements OnInit {
           queryParamsHandling: 'merge',
         });
       });
+
     this.route.queryParamMap
       .pipe(
         map((pm) => pm.get('q') ?? ''),

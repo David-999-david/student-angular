@@ -12,6 +12,7 @@
     </button>
     <input
       type="search"
+      (keydown.enter)="onEnter()"
       placeholder="Search By Name"
       class="placeholder:text-gray-400 bg-white border border-black outline-none focus:border-blue-500 text-sm px-2 py-1 rounded mr-2"
       [formControl]="q"
@@ -61,7 +62,9 @@
 } @case ('error') {
 <div>{{ s.message }}</div>
 } @case ('ok') { @if (s.students.length===0){
-<p>No students found.</p>
+<p
+class="text-sm text-white text-center pt-30"
+>Not Found!...There is no students for show!</p>
 } @else {
 <div class="pb-5 px-1">
   <div class="relative overflow-x-auto border border-gray-300 shadow mx-auto rounded">

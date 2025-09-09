@@ -53,6 +53,11 @@ export class Student implements OnInit {
   private readonly destoryRef = inject(DestroyRef);
   private readonly refresh$ = new Subject<void>();
   private readonly dialog = inject(Dialog);
+  private enter$ = new Subject<void>();
+
+  onEnter() {
+    this.enter$.next();
+  }
 
   q = new FormControl<string>(this.route.snapshot.queryParamMap.get('q') ?? '', {
     nonNullable: true,
@@ -62,13 +67,16 @@ export class Student implements OnInit {
   deleteId = signal<number | null>(null);
 
   ngOnInit(): void {
-    this.q.valueChanges
-      .pipe(
-        map((v) => v.trim()),
-        debounceTime(500),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destoryRef)
-      )
+    const debounced$ = this.q.valueChanges.pipe(
+      map((v) => v.trim()),
+      debounceTime(2000),
+      distinctUntilChanged()
+    );
+
+    const enterAction$ = this.enter$.pipe(map(() => this.q.value?.trim() ?? ''));
+
+    merge(debounced$, enterAction$)
+      .pipe(takeUntilDestroyed(this.destoryRef))
       .subscribe((val) => {
         const nextQ = val.trim();
         this.router.navigate([], {

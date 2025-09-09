@@ -52,6 +52,11 @@ export class Course implements OnInit {
   private readonly router = inject(Router);
   private readonly destoryRef = inject(DestroyRef);
   private readonly dialog = inject(Dialog);
+  private enter$ = new Subject<void>();
+
+  onEnter() {
+    this.enter$.next();
+  }
 
   qc = new FormControl<string>(this.route.snapshot.queryParamMap.get('q') ?? '', {
     nonNullable: true,
@@ -60,13 +65,16 @@ export class Course implements OnInit {
   flash = signal<string | null>(null);
 
   ngOnInit(): void {
-    this.qc.valueChanges
-      .pipe(
-        map((v) => v.trim()),
-        debounceTime(500),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destoryRef)
-      )
+    const debounceSearch$ = this.qc.valueChanges.pipe(
+      map((v) => v.trim()),
+      debounceTime(2000),
+      distinctUntilChanged()
+    );
+
+    const enterAction$ = this.enter$.pipe(map(() => this.qc.value?.trim() ?? ''));
+
+    merge(debounceSearch$, enterAction$)
+      .pipe(takeUntilDestroyed(this.destoryRef))
       .subscribe((val) => {
         const nextQ = val.trim();
         this.router.navigate([], {

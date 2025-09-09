@@ -45,20 +45,27 @@ export class CourseDetail implements OnInit {
   private readonly sServ = inject(StudentService);
   private readonly destory = inject(DestroyRef);
   private readonly dialog = inject(Dialog);
+  private enter$ = new Subject<void>();
+
+  onEnter() {
+    this.enter$.next();
+  }
 
   ngOnInit(): void {
-    this.search.valueChanges
-      .pipe(
-        map((v) => v.trim()),
-        debounceTime(5000),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destory)
-      )
+    const debounceSearch$ = this.search.valueChanges.pipe(
+      map((val) => val.trim()),
+      debounceTime(3000),
+      distinctUntilChanged()
+    );
+
+    const enterAction$ = this.enter$.pipe(map(() => this.search.value?.trim() ?? ''));
+
+    merge(debounceSearch$, enterAction$)
+      .pipe(takeUntilDestroyed(this.destory))
       .subscribe((val) => {
-        const nextQ = val;
+        const nextS = val.trim();
         this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: { q: nextQ ? nextQ : null, p: 1 },
+          queryParams: { q: nextS ? nextS : null, p: 1 },
           queryParamsHandling: 'merge',
         });
       });
