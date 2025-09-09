@@ -76,4 +76,10 @@ export class StudentService {
       courseIds: cIds,
     });
   }
+
+  cancelJoinS(sId: number, cId: number) {
+    return this.http.delete(`${this.sBaseUrl}/${sId}/join/cancel`, {
+      body: { courseId: cId },
+    });
+  }
 }

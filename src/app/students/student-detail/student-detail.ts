@@ -390,4 +390,22 @@ export class StudentDetail implements OnInit {
       },
     });
   }
+
+  onDeleteId = signal<number | null>(null);
+
+  cancelJoinFn(cId: number) {
+    this.onDeleteId.set(cId);
+    this.service.cancelJoinS(this.currentStudent.id, cId).subscribe({
+      next: () => {
+        this.refresh$.next();
+        this.flash.set('Delete Success');
+        setTimeout(() => this.flash.set(null), 500);
+      },
+      error: (err) => {
+        const msg = typeof err?.error === 'string' ? err?.error : err?.message ?? 'Delete Failed';
+        this.flash.set(msg);
+        setTimeout(() => this.flash.set(null), 3000);
+      },
+    });
+  }
 }

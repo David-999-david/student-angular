@@ -151,7 +151,12 @@ export class CourseDetail implements OnInit {
       start_date: [''],
       end_date: [''],
     },
-    { validators: this.dateOrderValidator('start_date', 'end_date', false) }
+    {
+      validators: [
+        this.dateOrderValidator('start_date', 'end_date', false),
+        this.checkUpdateLimit('limit'),
+      ],
+    }
   );
 
   private currentC!: JoinCourseM;
@@ -174,6 +179,8 @@ export class CourseDetail implements OnInit {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  currentStudents = signal<number | null>(null);
+
   vm$ = combineLatest([
     this.course$,
     this.isEdit$,
@@ -191,6 +198,8 @@ export class CourseDetail implements OnInit {
       this.editing.set(e);
 
       this.join.set(j);
+
+      this.currentStudents.set(c.current);
 
       if (e) {
         this.form.enable({ emitEvent: false });
@@ -216,8 +225,8 @@ export class CourseDetail implements OnInit {
       name: c.name,
       description: c.description,
       status: c.status,
-      start_date: c.start_date,
-      end_date: c.end_date,
+      start_date: this.toDateTimeLocal(c.start_date),
+      end_date: this.toDateTimeLocal(c.end_date),
       limit: c.limit.toString(),
     });
   }
@@ -273,6 +282,15 @@ export class CourseDetail implements OnInit {
       if (!s || !e) return null;
       const ok = allowSameDay ? e >= s : e > s;
       return ok ? null : { dateOrder: true };
+    };
+  }
+
+  checkUpdateLimit(limit = 'limit'): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const formLimit = group.get('limit')?.value;
+      if (!formLimit) return null;
+      const ok = formLimit >= this.currentStudents()!;
+      return ok ? null : { limitError: true };
     };
   }
 

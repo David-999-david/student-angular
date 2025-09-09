@@ -72,9 +72,9 @@
           <th class="px-2 py-1">Description</th>
           <th class="px-2 py-1">Limit</th>
           <th class="px-2 py-1">Current</th>
-          <th class="px-2 py-1">Status</th>
           <th class="px-5 py-1">Start-Date</th>
           <th class="px-5 py-1">End-Date</th>
+          <th class="px-2 py-1">Status</th>
           <th class="px-3"></th>
         </tr>
       </thead>
@@ -85,12 +85,14 @@
           [routerLink]="['/courses', c.id, 'detail']"
         >
           <td class="px-2 py-2 w-24">{{ c.id }}</td>
-          <td class="px-2 w-40">{{ c.name }}</td>
+          <td class="px-2 w-60">{{ c.name }}</td>
           <td class="px-2">{{ c.description }}</td>
           <td class="px-2">{{ c.limit }}</td>
           <td class="px-2">{{ c.current }}</td>
+          <td class="px-3 w-48">{{ c.start_date }}</td>
+          <td class="px-3 py-2 w-48">{{ c.end_date }}</td>
           <td
-            class="px-2 w-[40px]"
+            class="px-3 w-[40px]"
             [class.bg-green-100]="c.status"
             [class.text-green-700]="c.status"
             [class.bg-red-100]="!c.status"
@@ -98,9 +100,7 @@
           >
             {{ c.status ? 'Active' : 'Inactive' }}
           </td>
-          <td class="px-5 w-48">{{ c.start_date }}</td>
-          <td class="px-5 py-2 w-48">{{ c.end_date }}</td>
-          <td>
+          <td class="px-3 text-center">
             @if (onDeleteId() === c.id) {
             <ng-icon name="heroArrowPath"></ng-icon>
             } @else {

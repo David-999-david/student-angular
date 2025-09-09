@@ -74,8 +74,8 @@
           <th class="px-3">Phone</th>
           <th class="px-3">Address</th>
           <th class="px-3">Gender</th>
-          <th class="px-3">Status</th>
           <th class="px-3">Courses</th>
+          <th class="px-3">Status</th>
           <th class="px-3"></th>
         </tr>
       </thead>
@@ -88,9 +88,10 @@
           <td class="px-3 w-24">{{ i + 1 }}</td>
           <td class="px-3 py-2 w-40">{{ st.name }}</td>
           <td class="px-3 w-40">{{ st.email }}</td>
-          <td class="px-3 w-48px">{{ st.phone}}</td>
+          <td class="px-3 w-48px">{{ st.phone }}</td>
           <td class="px-3 w-fit">{{ st.address }}</td>
-          <td class="px-3 w-24">{{ st.gender }}</td>
+          <td class="px-3">{{ st.gender }}</td>
+          <td class="px-3">{{ st.courses.length }}</td>
           <td
             class="px-3 w-[40px]"
             [class.bg-green-100]="st.status"
@@ -100,8 +101,7 @@
           >
             {{ st.status ? 'Active' : 'Inactive' }}
           </td>
-          <td class="px-3 w-40">{{ st.courses.length }}</td>
-          <td>
+          <td class="px-3 text-center">
             @if (deleteId() === st.id) {
             <ng-icon name="heroArrowPath"></ng-icon>
             } @else {

@@ -298,12 +298,13 @@
           <th class="px-3">Start Date</th>
           <th class="px-3">End Date</th>
           <th class="px-3">Status</th>
+          <th class="px-3"></th>
         </tr>
       </thead>
       <tbody class="divide-y text-sm">
         @for (c of v.s.courses; track c.id; let i = $index) {
         <tr>
-          <td class="px-3 py-1">{{ i + 1 }}</td>
+          <td class="px-3 py-1">{{ c.id }}</td>
           <td class="px-3 py-1">{{ c.name }}</td>
           <td class="px-3 py-1">{{ c.description }}</td>
           <td class="px-3 py-1">{{ c.limit }}</td>
@@ -317,6 +318,21 @@
             [class.bg-red-100]="!c.courseStatus"
           >
             {{ c.courseStatus ? 'Active' : 'Inactive' }}
+          </td>
+          <td class="px-3">
+            @if (onDeleteId() === c.id) {
+            <ng-icon name="heroArrowPath"></ng-icon>
+
+            } @else {
+            <button
+              class="inline-flex justify-center items-center px-1 py-0.5 border border-none rounded bg-red-300 text-white cursor-pointer hover:bg-red-400 hover:scale-110"
+              (click)="
+                cancelJoinFn(c.id); $event.stopImmediatePropagation(); $event.preventDefault()
+              "
+            >
+              <ng-icon name="heroMinus"> </ng-icon>
+            </button>
+            }
           </td>
         </tr>
         }

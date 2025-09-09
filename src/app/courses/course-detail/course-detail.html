@@ -1,5 +1,5 @@
 @defer (on viewport){ @if (vm$ | async; as v) {
-<div class="px-5 py-4">
+<div class="px-3 py-4">
   @if (v.e){
   <div>
     <form
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="space-y-1">
-          <div class="grid grid-cols-[140px_1fr] sm:grid-cols-[70px_1fr] items-center">
+          <div class="grid grid-cols-[140px_1fr] sm:grid-cols-[70px_1fr] sm:px-6 items-center">
             <label for="limit" class="text-sm font-medium">Limit</label>
             <input
               id="limit"
@@ -50,12 +50,16 @@
               class="border placeholder:text-gray-400 rounded w-full sm:w-[140px] px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
             />
           </div>
-          @if (c.limit.touched && c.limit.invalid) {
-          <small class="block text-red-600">
-            @if (c.limit.errors?.['required']) {Limit is required} @if (c.limit.errors?.['min'])
-            {Limit must be at least 5}
-          </small>
-          }
+          <div class="sm:pl-6">
+            @if (c.limit.touched && c.limit.invalid) {
+            <small class="block text-red-600 text-sm">
+              @if (c.limit.errors?.['required']) {Limit is required} @if (c.limit.errors?.['min'])
+              {Limit must be at least 5}
+            </small>
+            } @if (form.hasError('limitError')){
+            <small class="block text-red-600"> Changes limit must be greater than current </small>
+            }
+          </div>
         </div>
       </div>
       <div class="flex flex-col space-y-5">
@@ -118,8 +122,8 @@
   } @else {
   <div
     class="flex flex-col space-y-4 shadow bg-[#FBFBFB] w-full max-w-full sm:w-auto mx-auto sm:max-w-xl rounded px-5 py-3"
-    [ngClass]="v.j ? ['sticky', 'top-5', 'z-30'] : []"
   >
+    <!-- [ngClass]="v.j ? ['sticky', 'top-5', 'z-30'] : []" -->
     <div class="flex justify-between items-center">
       <span
         class="text-sm border border-none shadow rounded px-2 py-0.5"
@@ -129,12 +133,12 @@
         {{ v.c.status ? 'Active' : 'Inactive' }}
       </span>
       <div class="flex items-center gap-x-4">
-        @if (flash()) {
+        @if (flash() && flash() !== 'Limit reach!') {
         <p
           class="text-sm border border-none shadow rounded bg-green-200 px-2 py-0.5"
           [ngClass]="{
-            'bg-red-400': flash() === 'Status is Inactive' || flash() === 'Limit reach!',
-            'text-white': flash() === 'Status is Inactive' || flash() === 'Limit reach!'
+            'bg-red-400': flash() === 'Status is Inactive',
+            'text-white': flash() === 'Status is Inactive'
           }"
         >
           {{ flash() }}
@@ -197,20 +201,39 @@
     </div>
   </div>
   } @if (v.j) { @if (joinSIds().size > 0) {
-  <div class="sticky top-85 sm:top-65 z-30 rounded border border-none bg-white px-3 py-1 mt-4 mb-4">
+  <div class="sticky top-2 sm:top-2 z-30 rounded border border-none bg-white px-3 py-1 mt-4 mb-4">
     <div class="flex justify-between mt-3 text-sm">
-      <button
-        class="border border-none rounded px-2 py-0.5 bg-red-200 hover:bg-red-300 cursor-pointer"
-        (click)="removeAll()"
-      >
-        Clear All
-      </button>
-      <button
-        class="border border-none rounded px-2 py-0.5 bg-blue-200 hover:bg-blue-400 cursor-pointer"
-        (click)="joinS()"
-      >
-        {{ joining() ? 'Joining...' : 'Join' }}
-      </button>
+      <div class="flex gap-6">
+        <button
+          class="border border-none rounded px-2 py-0.5 bg-red-200 hover:bg-red-300 cursor-pointer"
+          (click)="removeAll()"
+        >
+          Clear All
+        </button>
+        @if (flash() && flash() === 'Limit reach!') {
+        <p
+          class="text-sm text-center border border-none shadow rounded bg-green-200 px-2 pt-2 bg-red-400 text-white"
+        >
+          {{ flash() }}
+        </p>
+        }
+      </div>
+      <div class="flex gap-6">
+        <div class="
+        border border-none rounded px-2 py-1 shadow
+        ">
+          <span
+          class="text-lg font-medium"
+          >{{ v.c.current + joinSIds().size }}</span>
+          <span>/{{ v.c.limit }}</span>
+        </div>
+        <button
+          class="border border-none rounded px-2 py-0.5 bg-blue-200 hover:bg-blue-400 cursor-pointer"
+          (click)="joinS()"
+        >
+          {{ joining() ? 'Joining...' : 'Join' }}
+        </button>
+      </div>
     </div>
     <div class="flex flex-wrap gap-5 mt-4 mb-4">
       @for (s of joinSList(); track s.id) {
@@ -261,7 +284,7 @@
     </div>
   </div>
   @if (filteredStudents.length === 0) {
-  <p>There is no students for join</p>
+  <p class="text-sm text-white text-center mt-20">Not found</p>
   } @else {
   <div class="flex justify-between mb-2 ml-1 mt-1"></div>
   <div class="pb-5 px-1">
@@ -350,18 +373,14 @@
             {{ s.status ? 'Active' : 'Inactive' }}
           </td>
           <td class="px-3">{{ s.gender }}</td>
-          <td>
+          <td class="px-3 text-center">
             @if(deleteId() === s.id){
             <ng-icon name="heroArrowPath"></ng-icon>
             } @else {
             <button
-            class="
-            inline-flex justify-center items-center
-            px-1 py-0.5 border border-none rounded
-            bg-red-300 text-white cursor-pointer
-            hover:bg-red-400 hover:scale-110
-            "
-            (click)="cancelJoinFn(s.id); $event.stopPropagation(); $event.preventDefault()">
+              class="inline-flex justify-center items-center px-1 py-0.5 border border-none rounded bg-red-300 text-white cursor-pointer hover:bg-red-400 hover:scale-110"
+              (click)="cancelJoinFn(s.id); $event.stopPropagation(); $event.preventDefault()"
+            >
               <ng-icon name="heroMinus"></ng-icon>
             </button>
             }
