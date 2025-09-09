@@ -16,8 +16,8 @@ export interface CourseM {
   description: string;
   limit: number;
   current: number;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   createdAt: Date;
   courseStatus: boolean;
 }

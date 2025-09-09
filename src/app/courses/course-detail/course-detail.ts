@@ -4,6 +4,7 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  firstValueFrom,
   map,
   merge,
   shareReplay,
@@ -26,6 +27,8 @@ import { JoinCourseM, updateC } from '../../models/course/course.model';
 import { StudentService } from '../../services/student.service';
 import { ApiResponse, ApiResponseList, StudentJM } from '../../models/student/student.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Dialog } from '@angular/cdk/dialog';
+import { ConfirmDialog } from '../../ui/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-course-detail',
@@ -41,6 +44,7 @@ export class CourseDetail implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly sServ = inject(StudentService);
   private readonly destory = inject(DestroyRef);
+  private readonly dialog = inject(Dialog);
 
   ngOnInit(): void {
     this.search.valueChanges
@@ -497,5 +501,19 @@ export class CourseDetail implements OnInit {
         setTimeout(() => this.flash.set(null), 3000);
       },
     });
+  }
+
+  async cancelJoinD(s: number) {
+    const ref = this.dialog.open<boolean>(ConfirmDialog, {
+      data: { title: 'Cancel Join?', message: 'This action cannot be undone.' },
+      backdropClass: 'tw-backdrop',
+      panelClass: 'tw-panel',
+    });
+
+    const ok = await firstValueFrom(ref.closed);
+
+    if (ok === true) {
+      this.cancelJoinFn(s);
+    }
   }
 }

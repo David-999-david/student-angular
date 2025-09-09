@@ -212,7 +212,7 @@
         </button>
         @if (flash() && flash() === 'Limit reach!') {
         <p
-          class="text-sm text-center border border-none shadow rounded bg-green-200 px-2 pt-2 bg-red-400 text-white"
+          class="text-sm text-center border border-none shadow rounded bg-green-200 px-2 py-0.5 bg-red-400 text-white"
         >
           {{ flash() }}
         </p>
@@ -220,7 +220,7 @@
       </div>
       <div class="flex gap-6">
         <div class="
-        border border-none rounded px-2 py-1 shadow
+        border border-none rounded px-2 shadow
         ">
           <span
           class="text-lg font-medium"
@@ -379,7 +379,7 @@
             } @else {
             <button
               class="inline-flex justify-center items-center px-1 py-0.5 border border-none rounded bg-red-300 text-white cursor-pointer hover:bg-red-400 hover:scale-110"
-              (click)="cancelJoinFn(s.id); $event.stopPropagation(); $event.preventDefault()"
+              (click)="cancelJoinD(s.id); $event.stopPropagation(); $event.preventDefault()"
             >
               <ng-icon name="heroMinus"></ng-icon>
             </button>

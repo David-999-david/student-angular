@@ -6,6 +6,7 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  firstValueFrom,
   from,
   map,
   merge,
@@ -19,6 +20,8 @@ import { ApiResponseList, Gender, StudentJM, updateS } from '../../models/studen
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CourseService } from '../../services/course.service';
 import { JoinCourseM } from '../../models/course/course.model';
+import { Dialog } from '@angular/cdk/dialog';
+import { ConfirmDialog } from '../../ui/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-student-detail',
@@ -34,6 +37,7 @@ export class StudentDetail implements OnInit {
   private readonly refresh$ = new Subject<void>();
   private readonly destory = inject(DestroyRef);
   private readonly cS = inject(CourseService);
+  private readonly dialog = inject(Dialog);
 
   search = new FormControl<string>(this.route.snapshot.queryParamMap.get('q') ?? '', {
     nonNullable: true,
@@ -330,10 +334,17 @@ export class StudentDetail implements OnInit {
     if (!this.currentStudent.status) {
       this.flash.set('Status is Inactive');
       setTimeout(() => this.flash.set(null), 5000);
+      return;
     }
     if (c.limit === c.current) {
       this.flash.set('Course is full!');
       setTimeout(() => this.flash.set(null), 5000);
+      return;
+    }
+    if (this.joinCIds().size >= 10) {
+      this.flash.set('Only can join 10 courses at once!');
+      setTimeout(() => this.flash.set(null), 5000);
+      return;
     } else {
       this.joinCIds.update((set) => {
         const next = new Set(set);
@@ -348,6 +359,17 @@ export class StudentDetail implements OnInit {
         }
       });
     }
+  }
+
+  removeJoin(c: JoinCourseM) {
+    this.joinCIds.update((set) => {
+      const next = new Set(set);
+      if (next.has(c.id)) {
+        next.delete(c.id);
+      }
+      return next;
+    });
+    this.joinCList.update((list) => list.filter((x) => x.id !== c.id));
   }
 
   joinStart = signal(false);
@@ -407,5 +429,19 @@ export class StudentDetail implements OnInit {
         setTimeout(() => this.flash.set(null), 3000);
       },
     });
+  }
+
+  async onCancel(c: number) {
+    const ref = this.dialog.open<boolean>(ConfirmDialog, {
+      data: { title: 'Cancel Join?', message: 'This action cannot be undone.' },
+      backdropClass: 'tw-backdrop',
+      panelClass: 'tw-panel',
+    });
+
+    const ok = await firstValueFrom(ref.closed);
+
+    if (ok === true) {
+      this.cancelJoinFn(c);
+    }
   }
 }

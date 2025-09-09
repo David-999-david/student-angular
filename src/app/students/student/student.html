@@ -107,7 +107,7 @@
             } @else {
             <button
               class="inline-flex justify-center items-center px-1 py-0.5 border border-none rounded bg-red-300 text-white cursor-pointer hover:bg-red-400 hover:scale-110"
-              (click)="delete(st.id); $event.stopPropagation(); $event.preventDefault()"
+              (click)="onDelete(st.id); $event.stopPropagation(); $event.preventDefault()"
             >
               <ng-icon name="heroArchiveBoxXMark" size="15"></ng-icon>
             </button>

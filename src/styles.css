@@ -1,8 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
-html, body {height: 100%;}
+@theme {
+    --color-1: #360033;
+    --color-2: #0b8793;
+}
+
+html, body {min-height: 100%;}
 
 body {
-    background: #000B58;
+    @apply bg-gradient-to-tl from-1 to-2
 }
+
+.tw-backdrop {@apply bg-black/40 backdrop-blur-[0.1px];}

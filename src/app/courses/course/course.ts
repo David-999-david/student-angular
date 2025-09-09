@@ -6,6 +6,7 @@ import {
   catchError,
   debounceTime,
   distinctUntilChanged,
+  firstValueFrom,
   map,
   merge,
   of,
@@ -17,6 +18,8 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ApiResponseList } from '../../models/student/student.model';
 import { JoinCourseM } from '../../models/course/course.model';
+import { Dialog } from '@angular/cdk/dialog';
+import { ConfirmDialog } from '../../ui/confirm-dialog/confirm-dialog';
 
 type UIState =
   | { kind: 'loading'; total: number; queryTotal: number; page: number; totalPage: number }
@@ -48,6 +51,7 @@ export class Course implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destoryRef = inject(DestroyRef);
+  private readonly dialog = inject(Dialog);
 
   qc = new FormControl<string>(this.route.snapshot.queryParamMap.get('q') ?? '', {
     nonNullable: true,
@@ -188,6 +192,20 @@ export class Course implements OnInit {
   }
 
   onDeleteId = signal<number | null>(null);
+
+  async onDelete(id: number) {
+    const ref = this.dialog.open<boolean>(ConfirmDialog, {
+      data: { title: 'Delete item', message: 'This action cannot be undone.' },
+      backdropClass: 'tw-backdrop',
+      panelClass: 'tw-panel',
+    });
+
+    const ok = await firstValueFrom(ref.closed);
+
+    if (ok === true) {
+      this.delete(id);
+    }
+  }
 
   delete(id: number) {
     this.onDeleteId.set(id);

@@ -84,7 +84,7 @@
           class="even:bg-gray-100 odd:bg-white text-sm"
           [routerLink]="['/courses', c.id, 'detail']"
         >
-          <td class="px-2 py-2 w-24">{{ c.id }}</td>
+          <td class="px-2 py-2 w-24">{{ i + 1 }}</td>
           <td class="px-2 w-60">{{ c.name }}</td>
           <td class="px-2">{{ c.description }}</td>
           <td class="px-2">{{ c.limit }}</td>
@@ -106,7 +106,7 @@
             } @else {
             <button
               class="inline-flex justify-center items-center px-1 py-0.5 border border-none rounded bg-red-300 text-white cursor-pointer hover:bg-red-400 hover:scale-110"
-              (click)="delete(c.id); $event.stopPropagation(); $event.preventDefault()"
+              (click)="onDelete(c.id); $event.stopPropagation(); $event.preventDefault()"
             >
               <ng-icon name="heroArchiveBoxXMark" size="15"></ng-icon>
             </button>

@@ -8,16 +8,39 @@ import { App } from './app';
 import { Student } from './students/student/student';
 import { Course } from './courses/course/course';
 import { NgIconsModule } from '@ng-icons/core';
-import { heroArchiveBoxXMark, heroArrowPath, heroArrowUturnLeft, heroDocumentPlus, heroMagnifyingGlass, heroMinus, heroPencilSquare, heroPlus, heroUserPlus, heroXMark } from '@ng-icons/heroicons/outline';
+import {
+  heroArchiveBoxXMark,
+  heroArrowPath,
+  heroArrowUturnLeft,
+  heroDocumentPlus,
+  heroMagnifyingGlass,
+  heroMinus,
+  heroPencilSquare,
+  heroPlus,
+  heroUserPlus,
+  heroXMark,
+} from '@ng-icons/heroicons/outline';
 import { akarPersonAdd } from '@ng-icons/akar-icons';
 import { StudentAdd } from './students/student-add/student-add';
 import { StudentEdit } from './students/student-edit/student-edit';
 import { StudentDetail } from './students/student-detail/student-detail';
 import { CourseAdd } from './courses/course-add/course-add';
 import { CourseDetail } from './courses/course-detail/course-detail';
+import { DialogModule } from '@angular/cdk/dialog';
+import { ConfirmDialog } from './ui/confirm-dialog/confirm-dialog';
 
 @NgModule({
-  declarations: [App, Student, Course, StudentAdd, StudentEdit, StudentDetail, CourseAdd, CourseDetail],
+  declarations: [
+    App,
+    Student,
+    Course,
+    StudentAdd,
+    StudentEdit,
+    StudentDetail,
+    CourseAdd,
+    CourseDetail,
+    ConfirmDialog,
+  ],
   imports: [
     BrowserModule,
     NgIconsModule.withIcons({
@@ -31,10 +54,11 @@ import { CourseDetail } from './courses/course-detail/course-detail';
       heroDocumentPlus,
       heroArrowUturnLeft,
       heroXMark,
-      heroMinus
+      heroMinus,
     }),
     AppRoutingModule,
     ReactiveFormsModule,
+    DialogModule,
   ],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
   bootstrap: [App],
