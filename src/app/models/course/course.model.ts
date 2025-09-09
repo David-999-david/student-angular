@@ -8,8 +8,8 @@ export interface JoinCourseM {
   status: boolean;
   limit: number;
   current: number;
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
   createdAt: Date;
   students: StudentM[];
 }

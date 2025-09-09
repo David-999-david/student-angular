@@ -1,10 +1,13 @@
+import { formatDate } from '@angular/common';
 import { ApiResponseDTO, ApiResponseDTOList, CourseDTO } from '../student/student.dto';
 import { MapCourse, MapStudent } from '../student/student.mappers';
 import { ApiResponse, ApiResponseList, CourseM } from '../student/student.model';
 import { JoinCourseDTO } from './course.dto';
 import { JoinCourseM } from './course.model';
 
-const toDate = (iso: string) => new Date(iso);
+const toDate = (iso: string) => new Date(iso,);
+
+const formated = (iso: string) => formatDate(iso, 'd-MMM-yyyy HH:mm a','en-Us')
 
 export function MapJCourse(dto: JoinCourseDTO): JoinCourseM {
   return {
@@ -14,8 +17,8 @@ export function MapJCourse(dto: JoinCourseDTO): JoinCourseM {
     status: dto.status,
     limit: dto.student_limit,
     current: dto.current_students,
-    start_date: toDate(dto.start_date),
-    end_date: toDate(dto.end_date),
+    start_date: formated(dto.start_date),
+    end_date: formated(dto.end_date),
     createdAt: toDate(dto.created_at),
     students: (dto.students ?? []).map(MapStudent),
   };

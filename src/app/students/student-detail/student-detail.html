@@ -97,6 +97,7 @@
   } @else {
   <div
     class="flex flex-col bg-[#FBFBFB] w-full shadow sm:w-auto max-w-full sm:max-w-xl shadow rounded px-5 pt-4 pb-2 mx-auto"
+    [ngClass]="v.j ? ['sticky', 'top-5', 'z-30'] : []"
   >
     <div class="flex justify-between">
       <span
@@ -107,15 +108,39 @@
       >
       <div class="flex items-center gap-x-4">
         @if (flash()) {
-        <p class="text-sm border border-none shadow rounded bg-green-200 px-2 py-0.5">
+        <p
+          class="text-sm border border-none shadow rounded bg-green-200 px-2 py-0.5"
+          [ngClass]="{
+            'bg-red-400': flash() === 'Status is Inactive' || flash() === 'Course is full!',
+            'text-white': flash() === 'Status is Inactive' || flash() === 'Course is full!'
+          }"
+        >
           {{ flash() }}
         </p>
         }
-        <button class="inline-flex justify-center items-center bg-green-200 rounded text-[16px] hover:scale-110
-        px-0.5 py-0.5 cursor-pointer
-        " (click)="onClick()">
-          <ng-icon name="heroPencilSquare"></ng-icon>
-        </button>
+        <div class="flex gap-4">
+          <button
+            class="inline-flex justify-center items-center bg-green-200 rounded text-[16px] hover:scale-110 px-0.5 py-0.5 cursor-pointer"
+            (click)="onClick()"
+          >
+            <ng-icon name="heroPencilSquare"></ng-icon>
+          </button>
+          @if (v.j) {
+          <button
+            class="inline-flex justify-center items-center bg-green-200 rounded text-[16px] hover:scale-110 px-0.5 py-0.5 cursor-pointer"
+            (click)="cancelJoin()"
+          >
+            <ng-icon name="heroArrowUturnLeft"></ng-icon>
+          </button>
+          }@else {
+          <button
+            class="inline-flex justify-center items-center bg-green-200 rounded text-[16px] hover:scale-110 px-0.5 py-0.5 cursor-pointer"
+            (click)="onJoin()"
+          >
+            <ng-icon name="heroDocumentPlus"></ng-icon>
+          </button>
+          }
+        </div>
       </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-2 sm:gap-x-20 gap-y-3 mt-3 mb-3">
@@ -141,7 +166,124 @@
       </div>
     </div>
   </div>
-  } @if (v.s.courses.length === 0) {
+  } @if (v.j) { @if (joinCIds().size > 0) {
+  <div class="sticky top-70 sm:top-55 z-30 rounded border border-none bg-white px-3 py-1 mt-4 mb-4">
+    <div class="flex justify-between mt-3 text-sm">
+      <button
+        class="border border-none rounded px-2 py-0.5 bg-red-200 hover:bg-red-300 cursor-pointer"
+        (click)="removeAll()"
+      >
+        Clear All
+      </button>
+      <button
+        class="border border-none rounded px-2 py-0.5 bg-blue-200 hover:bg-blue-400 cursor-pointer"
+        (click)="joinC()"
+      >
+        {{ joinStart() ? 'Joining...' : 'Join' }}
+      </button>
+    </div>
+    <div class="flex flex-wrap gap-5 mt-4 mb-4">
+      @for (c of joinCList(); track c.id) {
+      <button
+        class="flex items-center text-sm bg-zinc-300 rounded px-2 py-1 cursor-pointer"
+        (click)="selectJoin(c)"
+      >
+        {{ c.name }}
+        <ng-icon name="heroXMark" class="mt-0.5" color="black"></ng-icon>
+      </button>
+      }
+    </div>
+  </div>
+  }
+  <div class="flex justify-between mb-2 mt-4 mx-1">
+    <div class="flex items-center">
+      <input
+        type="search"
+        [formControl]="search"
+        placeholder="Search..."
+        class="border rounded bg-white px-1 text-sm py-1 placeholder:text-gray-400 outline-none focus:border-blue-400 border-black"
+      />
+    </div>
+    <div class="mr-1.5">
+      <button
+        class="border rounded bg-white px-1 hover:bg-gray-200 text-sm py-1 mr-4 cursor-pointer"
+        [disabled]="v.q.p === 1"
+        (click)="prePage(v.q.p)"
+      >
+        Prev
+      </button>
+      @for (n of range(v.f.m.totalPages); track n) {
+      <button
+        class="text-[#FF9A00] px-2 cursor-pointer text-sm py-1 ml-2 mr-2"
+        [class.bg-white]="n == v.q.p"
+        [class.rounded]="n == v.q.p"
+        [class.bg-blue-200]="n == v.q.p"
+        (click)="goToPage(n)"
+      >
+        {{ n }}
+      </button>
+      }
+      <button
+        class="border rounded bg-white px-1 hover:bg-gray-200 text-sm py-1 ml-1 cursor-pointer"
+        [disabled]="v.q.p === v.f.m.totalPages"
+        (click)="nextPage(v.q.p)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+  @if (filteredC.length === 0) {
+  <p>Not found</p>
+  } @else {
+  <div class="pb-5 px-1">
+    <div class="relative overflow-x-auto border rounded">
+      <table class="table-auto min-w-full">
+        <thead class="bg-gray-200 text-sm font-medium">
+          <tr class="text-left">
+            <th class="px-2 py-1">No.</th>
+            <th class="px-2 py-1">Name</th>
+            <th class="px-2 py-1">Description</th>
+            <th class="px-2 py-1">Limit</th>
+            <th class="px-2 py-1">Current</th>
+            <th class="px-2 py-1">Status</th>
+            <th class="px-5 py-1">Start-Date</th>
+            <th class="px-5 py-1">End-Date</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          @for (c of filteredC; track c.id; let i = $index) {
+          <tr
+            class="cursor-pointer text-sm"
+            [ngClass]="{
+              'bg-blue-200': isSelected(c.id),
+              'odd:bg-white': !isSelected(c.id),
+              'even:bg-gray-100': !isSelected(c.id)
+            }"
+            (click)="selectJoin(c)"
+          >
+            <td class="px-2 py-2 w-24">{{ i + 1 }}</td>
+            <td class="px-2 w-40">{{ c.name }}</td>
+            <td class="px-2">{{ c.description }}</td>
+            <td class="px-2">{{ c.limit }}</td>
+            <td class="px-2">{{ c.current }}</td>
+            <td
+              class="px-2 w-[40px]"
+              [class.bg-green-100]="c.status"
+              [class.text-green-700]="c.status"
+              [class.bg-red-100]="!c.status"
+              [class.text-gray-700]="!c.status"
+            >
+              {{ c.status ? 'Active' : 'Inactive' }}
+            </td>
+            <td class="px-5 w-48">{{ c.start_date }}</td>
+            <td class="px-5 py-2 w-48">{{ c.end_date }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  } } @else { @if (v.s.courses.length === 0) {
   <p class="text-center text-sm text-white font-medium mt-30">There is no course</p>
   } @else {
   <div class="relative overflow-x-auto bg-[#FBFBFB] border border-gray-300 rounded shadow mt-5">
@@ -181,7 +323,7 @@
       </tbody>
     </table>
   </div>
-  }
+  } }
 </div>
 } @else {
 <span>Failed to load student detail</span>

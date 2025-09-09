@@ -24,6 +24,7 @@ import {
   MapJoinStudents,
   MapSResponse,
 } from '../models/student/student.mappers';
+import { JoinCResultDTO } from '../models/course/course.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -68,5 +69,11 @@ export class StudentService {
 
   delete(id: number) {
     return this.http.delete(`${this.sBaseUrl}/${id}`);
+  }
+
+  joinCourses(id: number, cIds: number[]): Observable<ApiResponse<JoinCResultDTO>> {
+    return this.http.post<ApiResponse<JoinCResultDTO>>(`${this.sBaseUrl}/${id}/join`, {
+      courseIds: cIds,
+    });
   }
 }

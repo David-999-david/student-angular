@@ -216,8 +216,8 @@ export class CourseDetail implements OnInit {
       name: c.name,
       description: c.description,
       status: c.status,
-      start_date: this.toDateTimeLocal(c.start_date),
-      end_date: this.toDateTimeLocal(c.end_date),
+      start_date: c.start_date,
+      end_date: c.end_date,
       limit: c.limit.toString(),
     });
   }
