@@ -3,7 +3,7 @@
 <div class="flex justify-between mb-2 mt-1 mx-1">
   <div class="flex items-center">
     <button
-      class="text-sm rounded border px-2 py-1 bg-blue-300 hover:bg-blue-400 mr-4"
+      class="text-sm rounded border px-2 hover:scale-105 border-none shadow py-1 bg-blue-300 hover:bg-blue-400 mr-4"
       routerLink="/courses/new"
     >
       <ng-icon name="heroDocumentPlus" class="pt-0.5"></ng-icon>
@@ -14,8 +14,18 @@
       (keydown.enter)="onEnter()"
       [formControl]="qc"
       placeholder="Search..."
-      class="border rounded bg-white px-1 text-sm py-1 placeholder:text-gray-400 outline-none focus:border-blue-400 border-black"
+      class="border border-none shadow rounded bg-white px-1 text-sm py-1 placeholder:text-gray-400 outline-none focus:border-blue-400 border-black"
     />
+    <select
+      class="ml-1.5 border border-none shadow rounded bg-white px-1 py-0.5
+      outline-none text-sm
+      "
+      [formControl]="status"
+    >
+      <option value="All">All</option>
+      <option value="Active">Active</option>
+      <option value="Inactive">Inactive</option>
+    </select>
     <p class="text-sm text-white ml-3 mr-3">
       @if (hasQuery | async) { Search:{{ s.total }} }@else { Total:{{ s.total }}
       }
@@ -30,7 +40,7 @@
   </div>
   <div class="mr-1.5">
     <button
-      class="border rounded bg-white px-1 hover:bg-gray-200 text-sm py-1 mr-4 cursor-pointer"
+      class="border border-none shadow rounded bg-white px-1 hover:bg-gray-200 text-sm py-1 mr-4 cursor-pointer"
       [disabled]="s.page === 1"
       (click)="prevPage(s.page)"
     >
@@ -48,7 +58,7 @@
     </button>
     }
     <button
-      class="border rounded bg-white px-1 hover:bg-gray-200 text-sm py-1 ml-1 cursor-pointer"
+      class="border border-none shadow rounded bg-white px-1 hover:bg-gray-200 text-sm py-1 ml-1 cursor-pointer"
       [disabled]="s.page === s.totalPage"
       (click)="nextPage(s.page)"
     >
@@ -57,13 +67,19 @@
   </div>
 </div>
 @switch (s.kind) { @case ('loading') {
-<p>Loading...</p>
+<p class="text-sm text-white text-center pt-40">Loading...</p>
 } @case ('error') {
 <p>Failed to load courses</p>
 } @case ('ok') { @if(s.courses.length === 0){
-<p
-class="text-sm text-white text-center pt-30"
->Not Found!...There is no courses for show!</p>
+<p class="text-sm text-white text-center pt-30">
+  Not Found!...There is no courses for show!
+  <button
+    class="ml-2 border border-none hover:scale-105 rounded bg-green-400 px-1 py-1 cursor-pointer"
+    [routerLink]="['/courses/new']"
+  >
+    Make Join
+  </button>
+</p>
 } @else {
 <div class="pb-5 px-1">
   <div class="relative overflow-x-auto border rounded">

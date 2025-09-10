@@ -103,18 +103,17 @@
       <div class="flex justify-start gap-2">
         <button
           [disabled]="saving()"
-          type="submit"
-          class="border rounded px-2 text-sm pb-0.5 bg-green-300 border-none shadow hover:bg-green-400 hover:text-white"
-        >
-          @if (saving()) {Saving} @if (!saving()) {Save}
-        </button>
-        <button
-          [disabled]="saving()"
           type="button"
           (click)="cancel()"
           class="text-sm block border px-1 py-0.5 rounded bg-gray-400 hover:bg-gray-500 text-white"
         >
-          Cancel
+          Cancel</button
+        ><button
+          [disabled]="saving()"
+          type="submit"
+          class="border rounded px-2 text-sm pb-0.5 bg-green-300 border-none shadow hover:bg-green-400 hover:text-white"
+        >
+          @if (saving()) {Saving} @if (!saving()) {Save}
         </button>
       </div>
     </form>
@@ -140,8 +139,7 @@
             'bg-red-400': flash() === 'Status is Inactive',
             'text-white': flash() === 'Status is Inactive'
           }"
-        >
-          {{ flash() }}
+        >{{flash()}}
         </p>
         }
         <button
@@ -201,7 +199,7 @@
     </div>
   </div>
   } @if (v.j) { @if (joinSIds().size > 0) {
-  <div class="sticky top-2 sm:top-2 z-30 rounded border border-none bg-white px-3 py-1 mt-4 mb-4">
+  <div class="sticky top-2 sm:top-2 z-30 rounded border border-blue-500 bg-white px-3 py-1 mt-4 mb-4">
     <div class="flex justify-between mt-3 text-sm">
       <div class="flex gap-6">
         <button
@@ -219,12 +217,8 @@
         }
       </div>
       <div class="flex gap-6">
-        <div class="
-        border border-none rounded px-2 shadow
-        ">
-          <span
-          class="text-lg font-medium"
-          >{{ v.c.current + joinSIds().size }}</span>
+        <div class="border border-none rounded px-2 shadow">
+          <span class="text-lg font-medium">{{ v.c.current + joinSIds().size }}</span>
           <span>/{{ v.c.limit }}</span>
         </div>
         <button
@@ -338,7 +332,17 @@
     </div>
   </div>
   } } @else { @if (v.c.students.length === 0) {
-  <p class="text-center text-sm text-white font-medium mt-30">There is no students</p>
+  <div class="flex justify-center">
+    <p class="text-center text-sm text-white font-medium mt-30">
+      No Student Join!
+      <button
+        class="ml-2 border border-none rounded bg-green-400 hover:scale-105 px-1 py-1 cursor-pointer"
+        (click)="makeJoin()"
+      >
+        Make Join
+      </button>
+    </p>
+  </div>
   } @else {
   <div
     class="relative overflow-x-auto border border-none rounded mt-5 bg-[#FBFBFB] border-gray-300 shadow"
@@ -346,7 +350,7 @@
     <table class="table-auto min-w-full">
       <thead class="text-sm font-medium text-left">
         <tr class="bg-gray-300">
-          <th class="px-3 py-1">No.</th>
+          <th class="px-3 py-2">No.</th>
           <th class="px-3">Name</th>
           <th class="px-3">Email</th>
           <th class="px-3">Phone</th>
@@ -359,7 +363,7 @@
       <tbody class="divide-y">
         @for (s of v.c.students; track s.id; let i = $index) {
         <tr class="text-sm odd:bg-white even:bg-gray-100">
-          <td class="px-3 py-1">{{ i + 1 }}</td>
+          <td class="px-3 py-3">{{ i + 1 }}</td>
           <td class="px-3">{{ s.name }}</td>
           <td class="px-3">{{ s.email }}</td>
           <td class="px-3">{{ s.phone }}</td>
@@ -394,11 +398,11 @@
   } }
 </div>
 } @else {
-<p>Failed to Load Course detail</p>
+<p class="text-sm text-center text-white">Failed to Load Course detail</p>
 } } @placeholder {
-<p>Loading...</p>
+<p class="text-sm text-center text-white pt-20">Loading...</p>
 } @loading {
-<p>Loading...</p>
+<p class="text-sm text-center text-white pt-20">Loading...</p>
 } @error {
-<p>Couldn't load course detail</p>
+<p class="text-sm text-center text-white pt-20">Couldn't load course detail</p>
 }

@@ -1,9 +1,10 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { CourseService } from '../../services/course.service';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   catchError,
+  combineLatest,
   debounceTime,
   distinctUntilChanged,
   firstValueFrom,
@@ -121,6 +122,8 @@ export class Course implements OnInit {
     distinctUntilChanged()
   );
 
+  status = new FormControl<'All' | 'Active' | 'Inactive'>('All', { nonNullable: true });
+
   private vms$ = merge(
     this.query$,
     this.refresh$.pipe(
@@ -165,6 +168,28 @@ export class Course implements OnInit {
     } as UIState)
   );
 
+  display$ = combineLatest([
+    this.vms$,
+    this.status.valueChanges.pipe(startWith(this.status.value)),
+  ]).pipe(
+    map(([ui, status]) => {
+      if (ui.kind !== 'ok') return ui;
+
+      const filter =
+        status === 'All'
+          ? ui.courses
+          : ui.courses.filter((c) =>
+              status === 'Active' ? c.status === true : c.status === false
+            );
+      return {
+        ...ui,
+        courses: filter,
+        total: ui.total,
+        queryTotal: filter.length,
+      } as UIState;
+    })
+  );
+
   goToPage(p: number) {
     const qpm = this.route.snapshot.queryParamMap;
     const q = qpm.get('q') ?? null;
@@ -184,7 +209,7 @@ export class Course implements OnInit {
     this.goToPage(cur + 1);
   }
 
-  state = toSignal(this.vms$, {
+  state = toSignal(this.display$, {
     initialValue: {
       kind: 'loading',
       page: 1,

@@ -1,179 +1,139 @@
-<form [formGroup]="form" (ngSubmit)="submit()" novalidate
-class="space-y-5 max-w-md w-full mx-auto rounded-lg mb-10 mt-2
-shadow p-6 bg-white
-"
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  novalidate
+  class="space-y-5 max-w-md w-full mx-auto rounded-lg mb-10 mt-2 shadow p-6 bg-white"
 >
-    <p class="text-center text-lg font-semibold">Create Student</p>
-    @if (successMsg){
-        <p>{{successMsg}}</p>
-    }
-    @if (errorMsg){
-        <p>{{errorMsg}}</p>
-    }
+  <p class="text-center text-lg font-semibold">Create Student</p>
+  @if (successMsg){
+  <p>{{ successMsg }}</p>
+  } @if (errorMsg){
+  <p>{{ errorMsg }}</p>
+  }
 
-    <div class="space-y-2">
-        <label for="name"
-        class="block text-sm font-medium"
-        >Name</label>
-        <input
-        id="name" 
-        class="w-full border text-sm
-        border-gray-300
-        outline-none
-        focus:border-blue-500
-        focus:ring-1
-        focus:ring-blue-500
-        px-2 py-1 placeholder:text-gray-400 rounded"
-        formControlName="name"
-        [disabled]="saving"
-        placeholder="Name"
-        >
-        @if (c.name.touched && c.name.invalid){
-            <small class="block text-red-600">
-                @if(c.name.errors?.['required']) {Name is required.}
-                @if(c.name.errors?.['minlength']) {Name must be at least 2 characters}
-            </small>
-        }
-    </div>
-    <div
-    class="space-y-2"
-    >
-        <label for="email" class="block text-sm font-medium">Email</label>
-        <input
-        id="email"
-        formControlName="email"
-        [disabled]="saving"
-        placeholder="Email"
-        class="w-full border px-2 py-1 placeholder:text-gray-400 rounded
-        border-gray-300 text-sm
-        focus:border-blue-500
-        outline-none
-        focus:ring-1
-        focus:ring-blue-500
-        ">
-        @if (c.email.touched && c.email.invalid){
-            <small class="block text-red-600">
-                @if(c.email.errors?.['required']) {Email is required}
-                @if(c.email.errors?.['email']) {Invalid email}
-            </small>
-        }
-    </div>
-    <div
-    class="space-y-2"
-    >
-        <label for="phone" class="block text-sm font-medium">Phone</label>
-        <input
-        id="phone"
-        formControlName="phone"
-        [disabled]="saving"
-        placeholder="Phone number"
-        class="w-full border px-2 py-1 placeholder:text-gray-400 rounded
-        border-gray-300
-        outline-none text-sm
-        focus:border-blue-500
-        focus:ring-1
-        focus:ring-blue-500
-        ">
-        @if (c.phone.touched && c.phone.invalid){
-            <small class="block text-red-600">
-                @if(c.phone.errors?.['required']) {Phone is required}
-                @if(c.phone.errors?.['minlength']) {Must be at least 8 digits}
-            </small>
-        }
-    </div>
-    <div class="space-y-2">
-        <label for="address" class="block text-sm font-medium">Address</label>
-        <textarea
-        id="address"
-        formControlName="address"
-        [disabled]="saving"
-        placeholder="Address"
-        rows="3"
-        class="w-full border px-2 py-1 placeholder:text-gray-400 rounded
-        outline-none
-        border-gray-300 text-sm
-        focus:border-blue-500
-        focus:ring-1
-        focus:ring-blue-500
-        "></textarea>
-        @if (c.address.touched && c.address.invalid){
-            <small class="block text-red-600">
-                @if(c.address.errors?.['required']) {Address is required}
-                @if(c.address.errors?.['minlength']) {Address is too short}
-            </small>
-        }
-    </div>
-    @defer (on viewport) {
-        @if (gender$ |async; as genders) {
-            <div>
-                <div class="flex justify-between">
-                    <label for="gender" class="text-sm font-medium">Gender</label>
-                <select id="gender"
-                formControlName="gender_id"
-                [disabled]="saving"
-                class="border rounded text-sm px-1 py-0.5
-                outline-none
-                border-gray-400
-                focus:border-blue-500
-                "
-                >
-                    <option value="" disabled
-                    class="text-gray-400"
-                    >Select Gender</option>
-                    @for (g of genders; track g.id) {
-                        <option
-                        [value]="g.id">{{g.gender}}</option>
-                    } @empty {
-                        <option disabled>No genders</option>
-                    }
-                </select>
-                </div>
-                @if (c.gender_id.touched && c.gender_id.invalid){
-                    <small class="block text-right text-red-600">Please choose a gender.</small>
-                }
-            </div>
-        } @else {
-            <p>Failed to load genders.</p>
-        }
-    } @placeholder {
-        <p>Loading genders...</p>
-    } @loading {
-        <p>Loading</p>
-    } @error {
-        <p>Couldn't load for genders</p>
+  <div class="space-y-2">
+    <label for="name" class="block text-sm font-medium">Name</label>
+    <input
+      id="name"
+      class="w-full border text-sm border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 px-2 py-1 placeholder:text-gray-400 rounded"
+      formControlName="name"
+      [disabled]="saving"
+      placeholder="Name"
+    />
+    @if (c.name.touched && c.name.invalid){
+    <small class="block text-red-600">
+      @if(c.name.errors?.['required']) {Name is required.} @if(c.name.errors?.['minlength']) {Name
+      must be at least 2 characters}
+    </small>
     }
+  </div>
+  <div class="space-y-2">
+    <label for="email" class="block text-sm font-medium">Email</label>
+    <input
+      id="email"
+      formControlName="email"
+      [disabled]="saving"
+      placeholder="Email"
+      class="w-full border px-2 py-1 placeholder:text-gray-400 rounded border-gray-300 text-sm focus:border-blue-500 outline-none focus:ring-1 focus:ring-blue-500"
+    />
+    @if (c.email.touched && c.email.invalid){
+    <small class="block text-red-600">
+      @if(c.email.errors?.['required']) {Email is required} @if(c.email.errors?.['email']) {Invalid
+      email}
+    </small>
+    }
+  </div>
+  <div class="space-y-2">
+    <label for="phone" class="block text-sm font-medium">Phone</label>
+    <input
+      id="phone"
+      formControlName="phone"
+      [disabled]="saving"
+      placeholder="Phone number"
+      class="w-full border px-2 py-1 placeholder:text-gray-400 rounded border-gray-300 outline-none text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+    />
+    @if (c.phone.touched && c.phone.invalid){
+    <small class="block text-red-600">
+      @if(c.phone.errors?.['required']) {Phone is required} @if(c.phone.errors?.['minlength']) {Must
+      be at least 8 digits}
+    </small>
+    }
+  </div>
+  <div class="space-y-2">
+    <label for="address" class="block text-sm font-medium">Address</label>
+    <textarea
+      id="address"
+      formControlName="address"
+      [disabled]="saving"
+      placeholder="Address"
+      rows="3"
+      class="w-full border px-2 py-1 placeholder:text-gray-400 rounded outline-none border-gray-300 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+    ></textarea>
+    @if (c.address.touched && c.address.invalid){
+    <small class="block text-red-600">
+      @if(c.address.errors?.['required']) {Address is required} @if(c.address.errors?.['minlength'])
+      {Address is too short}
+    </small>
+    }
+  </div>
+  @defer (on viewport) { @if (gender$ |async; as genders) {
+  <div>
     <div class="flex justify-between">
-        <label for="status" class="text-sm font-medium">Status</label>
-        <select 
-        id="status"
-        formControlName="status"
+      <label for="gender" class="text-sm font-medium">Gender</label>
+      <select
+        id="gender"
+        formControlName="gender_id"
         [disabled]="saving"
-        class="border rounded
-        text-sm px-1 py-0.5
-        outline-none
-        border-gray-400
-        focus:border-blue-500
-        ">
-            <option [ngValue]="true">Active</option>
-            <option [ngValue]="false">Inactive</option>
-        </select>
+        class="border rounded text-sm px-1 py-0.5 outline-none border-gray-400 focus:border-blue-500"
+      >
+        <option value="" disabled class="text-gray-400">Select Gender</option>
+        @for (g of genders; track g.id) {
+        <option [value]="g.id">{{ g.gender }}</option>
+        } @empty {
+        <option disabled>No genders</option>
+        }
+      </select>
     </div>
-
+    @if (c.gender_id.touched && c.gender_id.invalid){
+    <small class="block text-right text-red-600">Please choose a gender.</small>
+    }
+  </div>
+  } @else {
+  <p>Failed to load genders.</p>
+  } } @placeholder {
+  <p>Loading genders...</p>
+  } @loading {
+  <p>Loading</p>
+  } @error {
+  <p>Couldn't load for genders</p>
+  }
+  <div class="flex justify-between">
+    <label for="status" class="text-sm font-medium">Status</label>
+    <select
+      id="status"
+      formControlName="status"
+      [disabled]="saving"
+      class="border rounded text-sm px-1 py-0.5 outline-none border-gray-400 focus:border-blue-500"
+    >
+      <option [ngValue]="true">Active</option>
+      <option [ngValue]="false">Inactive</option>
+    </select>
+  </div>
+  <div class="flex justify-center gap-5">
     <button
-    class="
-    block
-    mx-auto
-    w-fit
-    border bg-blue-200
-    px-2 py-1
-    cursor-pointer
-    rounded
-    text-sm
-    hover:bg-blue-400
-    hover:text-white
-    "
-    type="submit" [disabled]="saving">
-        @if (!saving) {Create}
-        @if (saving) {Saving...}
+      class="w-fit border border-none shoadow border bg-gray-300 px-2 py-1 cursor-pointer rounded text-sm hover:bg-gray-400 hover:text-white"
+      type="button"
+      [disabled]="saving"
+      (click)="back()"
+    >
+      Cancel
     </button>
+    <button
+      class="w-fit border border-none shoadow border bg-blue-200 px-2 py-1 cursor-pointer rounded text-sm hover:bg-blue-400 hover:text-white"
+      type="submit"
+      [disabled]="saving"
+    >
+      @if (!saving) {Create} @if (saving) {Saving...}
+    </button>
+  </div>
 </form>

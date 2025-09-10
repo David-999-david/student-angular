@@ -67,7 +67,7 @@ export class StudentAdd {
         //   gender_id: '',
         //   status: true,
         // });
-        this.router.navigate(['/students'], {state : {flash: 'Student created'}});
+        this.router.navigate(['/students'], { state: { flash: 'Student created' } });
       },
       error: (err) => {
         const msg =
@@ -81,5 +81,9 @@ export class StudentAdd {
         this.saving = false;
       },
     });
+  }
+
+  back() {
+    this.router.navigate(['/students']);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { StudentService } from '../../services/student.service';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -129,6 +129,13 @@ export class Student implements OnInit {
     )
   );
 
+  status = new FormControl<'all' | 'active' | 'inactive'>('all', { nonNullable: true });
+
+  statusSig = toSignal(
+    this.status.valueChanges.pipe(startWith(this.status.value), distinctUntilChanged()),
+    { initialValue: this.status.value }
+  );
+
   state = toSignal<UIState>(
     this.reload$.pipe(
       switchMap(({ q, p }) =>
@@ -161,6 +168,23 @@ export class Student implements OnInit {
     ),
     { requireSync: true }
   );
+
+  viewState = computed<UIState>(() => {
+    const s = this.state();
+    if (s.kind !== 'ok') return s;
+
+    const st = this.statusSig();
+
+    const filter =
+      st === 'all'
+        ? s.students
+        : s.students.filter((s) => (st === 'active' ? s.status === true : s.status === false));
+
+    return {
+      ...s,
+      students: filter,
+    };
+  });
 
   async onDelete(id: number) {
     const ref = this.dialog.open<boolean>(ConfirmDialog, {

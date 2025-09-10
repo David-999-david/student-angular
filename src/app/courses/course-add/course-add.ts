@@ -123,4 +123,8 @@ export class CourseAdd {
       },
     });
   }
+
+  back() {
+    this.router.navigate(['/courses']);
+  }
 }

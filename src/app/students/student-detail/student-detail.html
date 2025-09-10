@@ -78,18 +78,18 @@
       </div>
       <div class="flex gap-2">
         <button
-          type="submit"
-          [disabled]="saving()"
-          class="border rounded px-2 text-sm pb-0.5 bg-green-300 border-none shadow hover:bg-green-400 hover:text-white"
-        >
-          {{ saving() ? 'Saving..' : 'Save' }}
-        </button>
-        <button
           type="button"
           class="border rounded px-1 text-sm pb-0.5 bg-gray-400 text-white border-none shadow hover:bg-gray-500"
           (click)="cancel()"
         >
           Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="saving()"
+          class="border rounded px-2 text-sm pb-0.5 bg-green-300 border-none shadow hover:bg-green-400 hover:text-white"
+        >
+          {{ saving() ? 'Saving..' : 'Save' }}
         </button>
       </div>
     </form>
@@ -108,13 +108,12 @@
       <div class="flex items-center gap-x-4">
         @if (flash()) {
         <p
-          class="text-sm border border-none shadow rounded bg-green-200 px-2 py-0.5"
+          class="text-sm border border-none shadow rounded bg-green-200 overflow-hidden px-2 py-0.5"
           [ngClass]="{
             'bg-red-400': flash() === 'Status is Inactive' || flash() === 'Course is full!',
             'text-white': flash() === 'Status is Inactive' || flash() === 'Course is full!'
           }"
-        >
-          {{ flash() }}
+        >{{flash()}}
         </p>
         }
         <div class="flex gap-4">
@@ -167,7 +166,7 @@
   </div>
   } @if (v.j) { @if (joinCIds().size > 0) {
   <div
-    class="sticky top-4 sm:top-4 z-30 rounded border border-none bg-white px-3 py-1 mt-4 mb-4 sticky:back-drop:bg-black/50"
+    class="sticky top-4 sm:top-4 z-30 rounded border border-blue-500 bg-white px-3 py-1 mt-4 mb-4 sticky:back-drop:bg-black/50"
   >
     <div class="flex justify-between mt-3 text-sm">
       <div class="flex gap-6">
@@ -187,12 +186,18 @@
         </p>
         }
       </div>
-      <button
-        class="border border-none rounded px-2 py-0.5 bg-blue-200 hover:bg-blue-400 cursor-pointer"
-        (click)="joinC()"
-      >
-        {{ joinStart() ? 'Joining...' : 'Join' }}
-      </button>
+      <div class="flex gap-x-6">
+        <div class="border border-none rounded px-2 shadow">
+          <span class="text-lg font-medium">{{ joinCIds().size }}</span>
+          <span>/10</span>
+        </div>
+        <button
+          class="border border-none rounded px-2 py-0.5 bg-blue-200 hover:bg-blue-400 cursor-pointer"
+          (click)="joinC()"
+        >
+          {{ joinStart() ? 'Joining...' : 'Join' }}
+        </button>
+      </div>
     </div>
     <div class="flex flex-wrap gap-5 mt-4 mb-4">
       @for (c of joinCList(); track c.id) {
@@ -297,7 +302,15 @@
     </div>
   </div>
   } } @else { @if (v.s.courses.length === 0) {
-  <p class="text-center text-sm text-white font-medium mt-30">There is no course</p>
+  <p class="text-center text-sm text-white font-medium mt-30">
+    No course Join!
+    <button
+      class="ml-2 border border-none hover:scale-105 rounded bg-green-400 px-1 py-1 cursor-pointer"
+      (click)="onJoin()"
+    >
+      Make Join
+    </button>
+  </p>
   } @else {
   <div class="relative overflow-x-auto bg-[#FBFBFB] border border-gray-300 rounded shadow mt-5">
     <table class="table-auto min-w-full">

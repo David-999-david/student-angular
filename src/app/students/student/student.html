@@ -1,22 +1,30 @@
-@let s = state();
+@let s = viewState();
 
 <div class="flex justify-between mb-2 ml-1 mt-1">
   <div class="flex">
     <button
-      class="flex items-center justify-center text-sm mr-4 border border-gray-400 px-1 py-1 bg-blue-300 hover:bg-blue-400 hover:text-white cursor-pointer rounded"
+      class="flex items-center justify-center cursor-pointer text-sm mr-4 border border-none shadow hover:scale-105 px-1 py-1 bg-blue-300 hover:bg-blue-400 rounded"
       type="button"
       routerLink="/students/new"
     >
-      <ng-icon name="heroUserPlus" class="h-5 w-5 mt-0.5 mr-1 text-sm"></ng-icon>
+      <ng-icon name="heroUserPlus" class="h-5 w-5 mt-0.5 mr-1 text-sm cursor-pointer"></ng-icon>
       New
     </button>
     <input
       type="search"
       (keydown.enter)="onEnter()"
       placeholder="Search By Name"
-      class="placeholder:text-gray-400 bg-white border border-black outline-none focus:border-blue-500 text-sm px-2 py-1 rounded mr-2"
+      class="placeholder:text-gray-400 bg-white border border-none shadow outline-none focus:border-blue-500 text-sm px-2 py-1 rounded mr-2"
       [formControl]="q"
     />
+    <select
+      class="mr-1.5 border border-none shadow rounded bg-white px-1 py-0.5 outline-none text-sm"
+      [formControl]="status"
+    >
+      <option value="all">All</option>
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+    </select>
     <p class="text-sm mt-1 text-white mr-2">
       @if (hasQuery | async) { Search: {{ s.queryTotal }} } @else { Total: {{ s.total }}
       }
@@ -62,9 +70,15 @@
 } @case ('error') {
 <div>{{ s.message }}</div>
 } @case ('ok') { @if (s.students.length===0){
-<p
-class="text-sm text-white text-center pt-30"
->Not Found!...There is no students for show!</p>
+<p class="text-sm text-white text-center pt-30">
+  Not Found!...There is no students for show!
+  <button
+    class="ml-2 border border-none rounded bg-green-400 px-1 py-1 hover:scale-105 cursor-pointer"
+    [routerLink]="['/students/new']"
+  >
+    Add one?
+  </button>
+</p>
 } @else {
 <div class="pb-5 px-1">
   <div class="relative overflow-x-auto border border-gray-300 shadow mx-auto rounded">

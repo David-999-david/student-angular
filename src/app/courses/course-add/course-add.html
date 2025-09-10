@@ -55,9 +55,7 @@
           id="student_limit"
           formControlName="student_limit"
           placeholder="Student-limit"
-          class="border
-          placeholder:text-gray-400
-          rounded w-full sm:w-[140px] px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+          class="border placeholder:text-gray-400 rounded w-full sm:w-[140px] px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
         />
       </div>
       @if (c.student_limit.touched && c.student_limit.invalid) {
@@ -75,7 +73,7 @@
         <input
           id="start_date"
           formControlName="start_date"
-          class="border rounded  w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
+          class="border rounded w-fit px-2 text-sm pb-1 border-gray-300 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 py-1 active:border-blue-500"
           type="datetime-local"
           step="1"
         />
@@ -106,14 +104,21 @@
       }
     </div>
   </div>
-  <button
-  [disabled]="saving()" type="submit"
-  class="
-  text-sm block mx-auto border px-1 py-1 rounded
-  bg-blue-200 hover:bg-blue-400 hover:text-white
-  "
-  >
-  @if (saving()) {Saving} 
-  @if (!saving()) {Create}
-</button>
+  <span class="flex justify-center gap-5">
+    <button
+      [disabled]="saving()"
+      type="button"
+      (click)="back()"
+      class="text-sm border border-none shadow px-1 py-1 rounded bg-gray-300 hover:bg-gray-400 hover:text-white"
+    >
+      Cancel
+    </button>
+    <button
+      [disabled]="saving()"
+      type="submit"
+      class="text-sm  border border-none shadow px-1 py-1 rounded bg-blue-200 hover:bg-blue-400 hover:text-white"
+    >
+      @if (saving()) {Saving} @if (!saving()) {Create}
+    </button>
+  </span>
 </form>
