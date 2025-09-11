@@ -1,6 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -28,6 +28,11 @@ import { CourseAdd } from './courses/course-add/course-add';
 import { CourseDetail } from './courses/course-detail/course-detail';
 import { DialogModule } from '@angular/cdk/dialog';
 import { ConfirmDialog } from './ui/confirm-dialog/confirm-dialog';
+import { AuthInterceptorProvider } from './auth/auth-interceptor';
+import { RegisterComponent } from './register/register';
+import { LoginComponent } from './login/login';
+import { AuthShell } from './auth-shell/auth-shell';
+import { MainShell } from './main-shell/main-shell';
 
 @NgModule({
   declarations: [
@@ -40,6 +45,10 @@ import { ConfirmDialog } from './ui/confirm-dialog/confirm-dialog';
     CourseAdd,
     CourseDetail,
     ConfirmDialog,
+    RegisterComponent,
+    LoginComponent,
+    AuthShell,
+    MainShell,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +69,11 @@ import { ConfirmDialog } from './ui/confirm-dialog/confirm-dialog';
     ReactiveFormsModule,
     DialogModule,
   ],
-  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideHttpClient(withInterceptorsFromDi()),
+    AuthInterceptorProvider,
+  ],
   bootstrap: [App],
 })
 export class AppModule {}

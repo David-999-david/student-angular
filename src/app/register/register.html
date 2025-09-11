@@ -1,0 +1,74 @@
+<div class="space-y-1 mt-6">
+  <form [formGroup]="form" (ngSubmit)="register()"
+    class="max-w-md w-full mx-auto flex flex-col rounded border border-none shadow px-4 bg-white py-4 space-y-4 text-md"
+  >
+    <p class="inline text-[25px] text-sky-400">
+      R<span class="text-[15px] text-fuchsia-500">egister</span>
+    </p>
+    <div class="space-y-0.5">
+      <div class="sm:grid sm:grid-cols-[80px_1fr]">
+        <label for="name">Name</label>
+        <input
+          id="name"
+          formControlName="name"
+          placeholder="Enter your name"
+          class="border border-gray-400 rounded bg-white placeholder:text-gray-400 px-2 py-1 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+        />
+      </div>
+      @if (c.name.touched && c.name.invalid) {
+      <small class="ml-20 block text-red-600">
+        @if (c.name.errors?.['required']) {Username is required} @if (c.name.errors?.['minLength'])
+        {Mustt be at least 3}
+      </small>
+      }
+    </div>
+    <div class="space-y-0.5">
+      <div class="sm:grid sm:grid-cols-[80px_1fr]">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          formControlName="email"
+          placeholder="example@gmail.com"
+          class="border border-gray-400 rounded bg-white placeholder:text-gray-400 px-2 py-1 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+        />
+      </div>
+      @if (c.email.touched && c.email.invalid) {
+      <small class="ml-20 block text-red-600">
+        @if (c.email.errors?.['required']) {Email is required} @if (c.email.errors?.['email'])
+        {Invalid email}
+      </small>
+      }
+    </div>
+    <div class="space-y-0.5">
+      <div class="sm:grid sm:grid-cols-[80px_1fr]">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          formControlName="password"
+          placeholder="****"
+          class="border border-gray-400 rounded bg-white placeholder:text-gray-400 px-2 py-1 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+        />
+      </div>
+      @if (c.password.touched && c.password.invalid) {
+      <small class="ml-20 block text-red-600">
+        @if (c.password.errors?.['required']) {Password is required} @if
+        (c.password.errors?.['minLength']) {Mustt be at least 6}
+      </small>
+      }
+    </div>
+    <button
+    type="submit" [disabled]="saving()"
+      class="self-center cursor-pointer hover:bg-sky-500 hover:scale-105 transition-transform border border-none rounded bg-sky-400 text-white w-fit shadow px-2 pb-1 pt-0.5"
+    >
+      {{ saving() ? 'Loading..' : 'Sign-up' }}
+    </button>
+  </form>
+  <span class="text-sm text-white ml-10"
+    >Already have an account?
+    <span
+      routerLink="/auth/login"
+      class="inline-block underline underline-offset-4 decoration-1 text-sky-500 hover:scale-110 cursor-pointer transition-transform decoration-sky-500"
+      >Sign in</span
+    >
+  </span>
+</div>
