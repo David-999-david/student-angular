@@ -66,9 +66,9 @@
   </div>
 </div>
 @switch (s.kind) { @case ('loading') {
-<div>Loading...</div>
+<div class="text-sm text-center text-white pt-20">Loading...</div>
 } @case ('error') {
-<div>{{ s.message }}</div>
+<div class="text-sm text-center text-white pt-20">{{ s.message }}</div>
 } @case ('ok') { @if (s.students.length===0){
 <p class="text-sm text-white text-center pt-30">
   Not Found!...There is no students for show!

@@ -11,7 +11,8 @@ import { inject, Injectable } from '@angular/core';
 import { TokenService } from '../services/token';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
 
-const AuthPath = ['/auth/register', '/auth/login', '/auth/refresh'];
+const AuthPath = ['/auth/register', '/auth/login', '/auth/refresh', 
+  'auth/logout', 'auth/verify'];
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

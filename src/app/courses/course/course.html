@@ -17,9 +17,7 @@
       class="border border-none shadow rounded bg-white px-1 text-sm py-1 placeholder:text-gray-400 outline-none focus:border-blue-400 border-black"
     />
     <select
-      class="ml-1.5 border border-none shadow rounded bg-white px-1 py-0.5
-      outline-none text-sm
-      "
+      class="ml-1.5 border border-none shadow rounded bg-white px-1 py-0.5 outline-none text-sm"
       [formControl]="status"
     >
       <option value="All">All</option>
@@ -69,7 +67,7 @@
 @switch (s.kind) { @case ('loading') {
 <p class="text-sm text-white text-center pt-40">Loading...</p>
 } @case ('error') {
-<p>Failed to load courses</p>
+<p class="text-sm text-center text-white pt-20">Failed to load courses</p>
 } @case ('ok') { @if(s.courses.length === 0){
 <p class="text-sm text-white text-center pt-30">
   Not Found!...There is no courses for show!

@@ -113,7 +113,8 @@
             'bg-red-400': flash() === 'Status is Inactive' || flash() === 'Course is full!',
             'text-white': flash() === 'Status is Inactive' || flash() === 'Course is full!'
           }"
-        >{{flash()}}
+        >
+          {{ flash() }}
         </p>
         }
         <div class="flex gap-4">
@@ -366,9 +367,9 @@
   } }
 </div>
 } @else {
-<span>Failed to load student detail</span>
+<span class="text-sm text-center text-white pt-20">Failed to load student detail</span>
 } } @placeholder {
-<span>Loading Detail...</span>
+<span class="text-sm text-center text-white pt-20">Loading Detail...</span>
 } @loading {
-<span>Loading</span>
-} @error { Coundn't load student detail }
+<span class="text-sm text-center text-white pt-20">Loading</span>
+} @error { <span class="text-sm text-center text-white pt-20">Coundn't load student detai</span> }

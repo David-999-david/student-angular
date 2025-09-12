@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '../services/auth';
 import { TokenService } from '../services/token';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   private service = inject(AuthService);
   private ts = inject(TokenService);
   private readonly fb = inject(FormBuilder);
@@ -23,8 +23,18 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
+  ngOnInit(): void {
+    this.form.reset({ name: '', email: '', password: '' });
+  }
+
   get c() {
     return this.form.controls;
+  }
+
+  pV = signal(false);
+
+  pVC() {
+    this.pV.set(!this.pV());
   }
 
   saving = signal(false);
@@ -55,6 +65,7 @@ export class RegisterComponent {
             state: { flash: 'Register success!. Please sign in' },
           });
         }
+        this.form.reset({ name: '', email: '', password: '' });
       },
       error: (e) => {
         const msg =

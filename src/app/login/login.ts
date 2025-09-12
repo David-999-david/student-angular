@@ -26,6 +26,12 @@ export class LoginComponent {
     return this.form.controls;
   }
 
+  pV = signal(false);
+
+  pVC() {
+    this.pV.set(!this.pV());
+  }
+
   onLog = signal(false);
   errMsg = signal<string | null>(null);
 
@@ -52,10 +58,15 @@ export class LoginComponent {
       error: (e) => {
         const msg =
           typeof e?.error === 'string'
-            ? e?.error
+            ? e?.errorlo
             : e?.error ?? e?.error.message ?? 'Failed to register';
         this.errMsg.set(msg);
         this.onLog.set(false);
+        if (e.status === 403) {
+          this.c.password.setErrors({ server: 'Password is incorrect' });
+        } else if (e.status === 404) {
+          this.c.email.setErrors({ server: 'Email not found' });
+        }
       },
       complete: () => {
         this.onLog.set(false);

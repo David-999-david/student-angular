@@ -7,13 +7,13 @@
           <li
             routerLink="/students"
             routerLinkActive="bg-blue-400 rounded"
-            class="pb-0.5 hover:bg-blue-300 hover:text-white hover:rounded"
+            class="pb-0.5 hover:bg-gray-300 hover:text-blue-700 hover:rounded"
           >
             <a class="px-3 rounded cursor-pointer text-sm">Student</a>
           </li>
           <li
             routerLink="/courses"
-            routerLinkActive="bg-blue-400 rounded hover:bg-blue-300 hover:text-white"
+            routerLinkActive="bg-blue-400 rounded hover:bg-gray-300 hover:text-blue-600"
             class="pb-0.5"
           >
             <a class="px-3 rounded cursor-pointer text-sm">Course</a>
@@ -21,7 +21,7 @@
         </ul>
       </nav>
       <button
-        class="text-sm border border-none rounded bg-red-400 px-1 pb-0.5 shadow
+        class="text-sm border border-none rounded bg-red-400 px-2 pb-0.5 shadow
         hover:scale-105 cursor-pointer transition-transform
         text-white"
         (click)="logout()"
